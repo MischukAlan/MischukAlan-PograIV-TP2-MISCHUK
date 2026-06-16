@@ -1,0 +1,90 @@
+<div class="grid grid-cols-2 min-h-screen">
+    <div class="col-span-1 pr-20 flex flex-col justify-center items-end mt-20">
+        <h1 class="text-9xl text-purple-600 leading-[0.5]" style="font-family: 'Black Ops One'">CREA</h1>
+        <h2 class="text-4xl mr-2 font-bold text-black leading-none mt-2">UNA</h2>
+        <h3 class="text-4xl font-bold text-black leading-none">CUENTA</h3>
+        <h1 class="text-9xl text-purple-600 leading-none -mt-3" style="font-family: 'Black Ops One'">NUEVA</h1>
+    </div>
+
+    <div class="col-span-1 flex items-center h-screen">
+        <form [formGroup]="registroForm" (ngSubmit)="registrar()" class="bg-white p-4 w-full max-w-xl h-[90vh] overflow-y-auto pr-6">
+            <div class="text-left mb-4 mt-6">
+                <h2 class="text-2xl font-bold text-black ml-1 leading-none  uppercase">sign</h2>
+                <p class="text-8xl text-purple-600 -mt-2" style="font-family: 'Black Ops One';">UP</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-purple-900 mb-1">Nombre</label>
+                    <input formControlName="nombre" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-purple-900 mb-1">Apellido</label>
+                    <input formControlName="apellido" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-xs font-bold text-purple-900 mb-1">Nombre de usuario</label>
+                <input formControlName="username" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+            <div class="mt-2">
+                <label class="block text-xs font-bold text-purple-900 mb-1">Fecha de Nacimiento</label>
+                <input formControlName="fechaNacimiento" type="date" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+            </div>
+
+            <div class="mt-3">
+            <label class="block text-xs font-bold text-purple-900 mb-1">Imagen de Perfil</label>
+            <input type="file" id="fileInput" (change)="seleccionarArchivo($event)" class="hidden" accept="image/*">
+            <label for="fileInput" class="block w-full text-center bg-purple-200 border border-purple-400 p-2 rounded text-sm text-purple-800 cursor-pointer hover:bg-purple-300 transition">
+                {{ fotoPerfil ? fotoPerfil.name : 'Seleccionar foto de perfil...' }}
+            </label>
+            </div>
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-xs font-bold text-purple-900 mb-1">Descripcion</label>
+                <input formControlName="descripcion" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-xs font-bold text-purple-900 mb-1">Email</label>
+                <input formControlName="email" type="email" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+            </div>
+            <div class="mt-2">
+                <label class="block text-xs font-bold text-purple-900 mb-1">Repetir Email</label>
+                <input formControlName="emailConfirm" type="email" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-xs font-bold text-purple-900 mb-1">Contraseña</label>
+                <input formControlName="password" type="password" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+            </div>
+
+            <div class="mt-2">
+                <label class="block text-xs font-bold text-purple-900 mb-1">Repetir Contraseña</label>
+                <input formControlName="passwordConfirm" type="password" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
+            </div>
+
+            <p *ngIf="registroForm.get('password')?.hasError('contrasenaInsegura') && registroForm.get('password')?.touched" 
+                class="text-red-500 text-xs">
+                La contraseña debe tener 8 caracteres, 1 mayúscula y 1 número.
+                </p>
+
+                <p *ngIf="registroForm.hasError('noCoinciden') && registroForm.get('passwordConfirm')?.touched" 
+                class="text-red-500 text-xs">
+                Las contraseñas no coinciden.
+                </p>
+
+            <p *ngIf="registroForm.hasError('noCoincide') && registroForm.touched" class="text-red-500 text-xs mt-2">
+                Los emails o contraseñas no coinciden.
+            </p>
+
+            <button type="submit" class="w-full bg-purple-900 text-white font-bold py-3 rounded uppercase tracking-widest hover:bg-purple-950 transition-colors mt-8">
+                Registrarse
+            </button>
+        </form>
+    </div>
+</div>
