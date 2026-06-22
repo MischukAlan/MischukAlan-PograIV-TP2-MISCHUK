@@ -1,17 +1,24 @@
 <div class="grid grid-cols-5 min-h-screen">
   
-  <div class="flex flex-col gap-4 justify-center items-center h-full w-full col-span-1">
-    <a href="/perfil" class="group flex flex-col items-center gap-4">
-      <div class="w-24 h-24 rounded-full bg-gray-300"></div>
-      <h1 class="text-xl font-bold text-gray-800 group-hover:text-purple-700 transition-colors">
-        {{ usuario.nombre }}
-      </h1>
-      <h2>ir a mi perfil</h2>
-    </a>
+  <div class="col-span-1 border-r border-r-gray-300">
+    <div class="group sticky top-1/2 -translate-y-1/2 flex flex-col items-center">
+      <a href="/perfil" class="group flex flex-col items-center gap-4">
+        <img
+          [src]="usuario.foto"
+          class="w-24 h-24 rounded-full object-cover group-hover:shadow-md "
+        />
+        <h1 class="text-2xl font-bold text-gray-800 leading-5 uppercase ">
+          {{ usuario.nombre }}
+        </h1>
+        <h2 class="leading-0 text-xs font-semibold transition-colors text-purple-700 ">
+          Ir a mi perfil
+        </h2>
+      </a>
+    </div>
   </div>
 
-  <div class="col-span-3 flex flex-col items-center pt-10 px-4 overflow-y-auto shadow-[15px_0_20px_-15px_rgba(0,0,0,0.1),-15px_0_20px_-15px_rgba(0,0,0,0.1)]">
-
+  <div class="col-span-3 border-r border-r-gray-300 flex flex-col items-center pt-10 px-4 overflow-y-auto shadow-[15px_0_20px_-15px_rgba(0,0,0,0.1),-15px_0_20px_-15px_rgba(0,0,0,0.1)]">
+    
     <div class="w-full max-w-3xl mt-8 p-5 bg-white border border-gray-200 rounded-2xl shadow-sm mb-10">
       <input 
         type="text" 
@@ -37,16 +44,34 @@
       </div>
     </div>
 
-    <div class="w-full max-w-3xl flex flex-col gap-4">
-      
-      <div *ngFor="let p of listaPublicaciones" class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-        <h3 class="font-bold text-md text-gray-800">{{ p.titulo }}</h3>
-        <p class="text-gray-600 text-sm mt-1">{{ p.mensaje }}</p>
-        
-        <img *ngIf="p.imagenUrl" [src]="p.imagenUrl" class="mt-3 rounded-lg w-full" />
+    <div class="w-full max-w-3xl flex justify-end mb-3">
+        <div class="relative flex items-center">
+          <select
+          (change)="cambiarOrden($event)" 
+          class="rounded-b-lg border-b border-gray-300 text-sm text-gray-700 focus:outline-none cursor-pointer  hover:border-purple-300 transition-all">
+          <option value="fecha">Más recientes</option>
+          <option value="likes">Más populares</option>
+        </select>
       </div>
-
     </div>
 
+    <div class="w-full max-w-3xl flex flex-col gap-4 mb-4">
+      <app-publicacion 
+        *ngFor="let p of listaPublicaciones" 
+        [publicacion]="p"
+        (eliminada)="obtenerPublicaciones()">
+      </app-publicacion>
+    </div>
+
+    <div class="flex justify-center  mb-4">
+        <button 
+          (click)="cargarMas()" 
+          class="px-5 py-2 bg-white border border-purple-200 text-purple-700 rounded-full font-medium hover:bg-purple-50 transition-all shadow-sm flex items-center gap-2">
+          <span>Cargar más publicaciones</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      </div>
   </div>
 </div>

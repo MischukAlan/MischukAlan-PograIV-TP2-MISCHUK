@@ -33,6 +33,7 @@ async iniciarSesion() {
     .subscribe({
       next: (res: any) => {
         console.log("Respuesta del servidor:", res);
+        localStorage.setItem('usuario', JSON.stringify(res.usuario));
         this.router.navigate(['/muro']);
       },
       error: (err) => {

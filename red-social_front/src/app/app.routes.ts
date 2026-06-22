@@ -13,15 +13,13 @@ export const routes: Routes = [
     
     {path: '', redirectTo: '/login', pathMatch: 'full'},
     
-    {path: 'perfil',
-    component: Perfil,
-    canActivate: [authGuard]        
-
+    {path: 'perfil', component: Perfil,
+    // canActivate: [authGuard]        
     },
 
     {path: 'muro',
     component: Muro,
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
     },
     
     {path: '**', component: Error},    

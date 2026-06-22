@@ -14,7 +14,7 @@ import { supabase } from '../../supabase.client';
 })
 export class Registro {
   registroForm: FormGroup;
-  fotoPerfil: File | null = null;
+  fotoPerfil!: File ;
   enProceso = false; 
 
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
@@ -33,19 +33,27 @@ export class Registro {
 
   async registrar() {
     if (this.registroForm.valid && this.fotoPerfil) {
+      
       try {
-        const fileName = `perfiles/${Date.now()}_${this.fotoPerfil.name}`;
-        await supabase.storage.from('red-social').upload(fileName, this.fotoPerfil);
-        const { data } = supabase.storage.from('red-social').getPublicUrl(fileName);
+        const fileName = `fotoPerfil/${Date.now()}_${this.fotoPerfil.name}`;
+
+        await supabase.storage
+          .from('imagenes')
+          .upload(fileName, this.fotoPerfil);
+
+        const { data } = supabase.storage
+          .from('imagenes')
+          .getPublicUrl(fileName);
 
         const { emailConfirm, passwordConfirm, ...datosParaBack } = this.registroForm.value;
         
         const usuarioFinal = {
           ...datosParaBack,
           perfil: 'usuario',
-          imagenUrl: data.publicUrl
+          fotoPerfil: data.publicUrl
         };
-
+        console.log("Enviando al backend:", usuarioFinal);
+        console.log(data.publicUrl);
         this.http.post('http://localhost:3000/usuarios', usuarioFinal).subscribe({
           next: () => {
             alert('¡Usuario registrado!');
@@ -60,7 +68,11 @@ export class Registro {
       } catch (e) {
         this.registroForm.markAllAsTouched();
       }
-    }     
+   
+    } else {
+    this.registroForm.markAllAsTouched();
+    alert("Revisá los campos, hay errores o falta la foto");
+  }
   }
   
  verificarCoincidencia(control: AbstractControl): ValidationErrors | null {
@@ -83,7 +95,9 @@ export class Registro {
   }
   
   
-}  export function validadorContrasena(): ValidatorFn {
+} 
+
+export function validadorContrasena(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const password = control.value;
       if (!password) return null;
