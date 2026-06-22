@@ -3,26 +3,34 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class Publicaciones extends Document {
+
   @Prop({ required: true })
   titulo!: string;
-  
+
   @Prop({ required: true })
   mensaje!: string;
-  
+
   @Prop()
-  imagenURL!: string;
-  
+  imagenUrl!: string;
+
   @Prop()
-  usuarioID!: string;
-  
-  @Prop({ unique: true, required: true })
+  usuarioId!: string;
+
+  @Prop()
+  autor!: string;
+
+  @Prop()
+  fotoAutor!: string;
+
+  @Prop({ default: Date.now })
   fechaCreado!: Date;
-  
-  @Prop({ required: true })
+
+  @Prop({ default: true })
   activa!: boolean;
-  
+
   @Prop({ type: [String], default: [] })
   likes!: string[];
 }
 
-export const PublicacionesSchemas = SchemaFactory.createForClass(Publicaciones);
+export const PublicacionesSchema =
+  SchemaFactory.createForClass(Publicaciones);

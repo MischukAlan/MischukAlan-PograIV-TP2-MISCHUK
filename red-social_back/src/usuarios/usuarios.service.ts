@@ -12,13 +12,13 @@ export class UsuariosService {
   constructor(@InjectModel(Usuario.name) private usuarioModel: Model<Usuario>) {}
   
   async create(createUsuarioDto: CreateUsuarioDto) {
-    console.log("¡Llegaron los datos!", createUsuarioDto);
     const rondas = 10;
     const passwordHash = await bcrypt.hash(createUsuarioDto.password, rondas);
 
     const nuevoUsuario = {
       ...createUsuarioDto,
       password: passwordHash,
+      perfil: createUsuarioDto.perfil || 'usuario'
     };
 
     const usuarioCreado = new this.usuarioModel(nuevoUsuario);

@@ -17,8 +17,8 @@ export class CreateUsuarioDto {
   @IsEmail()
   email!: string;
   
-  @IsUrl()
-  imagenUrl!: string;
+  @IsString()
+  fotoPerfil!: string;
   
   @IsString()
   @MinLength(8)

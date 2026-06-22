@@ -17,6 +17,9 @@ export class Usuario extends Document {
   
   @Prop({ unique: true, required: true })
   email!: string;
+
+  @Prop({ required: true })
+  fotoPerfil!: string;
   
   @Prop({ required: true })
   password!: string;

@@ -1,4 +1,4 @@
-import { isString, IsString} from 'class-validator';
+import {IsString} from 'class-validator';
 
 
 export class CreatePublicacionesDto {
@@ -16,4 +16,7 @@ export class CreatePublicacionesDto {
 
   @IsString()
   usuarioId!: string;
+
+  @IsString()
+  fotoAutor!: string;
 }

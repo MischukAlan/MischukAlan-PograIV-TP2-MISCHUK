@@ -6,7 +6,7 @@ import { PublicacionesService } from './publicaciones.service';
 
 import {
   Publicaciones,
-  PublicacionesSchemas
+  PublicacionesSchema
 } from './entities/publicaciones.entity';
 
 @Module({
@@ -14,7 +14,7 @@ import {
     MongooseModule.forFeature([
       {
         name: Publicaciones.name,
-        schema: PublicacionesSchemas
+        schema: PublicacionesSchema
       }
     ])
   ],
