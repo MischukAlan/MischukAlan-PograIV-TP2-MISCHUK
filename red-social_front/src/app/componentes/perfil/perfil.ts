@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { catchError, of } from 'rxjs';
 import { Publicacion } from '../publicacion/publicacion';
 
 @Component({
@@ -13,32 +14,28 @@ import { Publicacion } from '../publicacion/publicacion';
 export class Perfil implements OnInit {
   usuario = signal<any>(null);
   misPublicaciones = signal<any[]>([]);
-  misComentarios = signal<any[]>([]);
   pestana: 'publicaciones' | 'comentarios' = 'publicaciones';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
     const userStorage = JSON.parse(localStorage.getItem('usuario') || '{}');
-    const userId = userStorage._id;
-
-    if (userId) {
-      this.cargarDatosUsuario(userId);
+    if (userStorage._id) {
+      this.usuario.set(userStorage);
+      this.cargarDatosUsuario(userStorage._id);
     }
   }
 
   cargarDatosUsuario(userId: string) {
-    this.http.get<any[]>(`http://localhost:3000/publicaciones?userId=${userId}&limit=3`)
-    .subscribe(data => {
-    this.misPublicaciones.set(data);
-    });
-
-    this.http.get<any[]>(`http://localhost:3000/publicaciones/usuario/${userId}`).subscribe(data => {
-      this.misPublicaciones.set(data);
-    });
-
-    this.http.get<any[]>(`http://localhost:3000/comentarios/usuario/${userId}`).subscribe(data => {
-      this.misComentarios.set(data);
-    });
+    this.http.get<any[]>(`http://localhost:3000/publicaciones?userId=${userId}&limit=5`)
+      .pipe(
+        catchError(error => {
+          console.error('Error cargando publicaciones:', error);
+          return of([]);
+        })
+      )
+      .subscribe(data => {
+        this.misPublicaciones.set(data);
+      });
   }
 }

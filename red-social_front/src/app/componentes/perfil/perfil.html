@@ -39,19 +39,15 @@
         @for (p of misPublicaciones(); track p._id) {
           <app-publicacion [publicacion]="p" (eliminada)="cargarDatosUsuario(usuario()._id)"></app-publicacion>
         } @empty {
-          <p class="text-gray-400 text-center py-4">No hay publicaciones aún.</p>
+          <div class="text-center py-12 flex flex-col items-center">
+            <p class="text-gray-500 text-lg">Aún no has realizado ninguna publicación.</p>
+          </div>
         }
       }
 
       @if (pestana === 'comentarios') {
-        @for (c of misComentarios(); track c._id) {
-          <div class="p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors">
-            <p class="text-gray-800 font-medium">"{{ c.texto }}"</p>
-            <span class="text-xs text-gray-400">En: {{ c.tituloPublicacion }}</span>
-          </div>
-        } @empty {
-          <p class="text-gray-400 text-center py-4">No has realizado comentarios todavía.</p>
-        }
+        <h1>No hay comentarios aun</h1>
+        
       }
     </div>
   </div>
