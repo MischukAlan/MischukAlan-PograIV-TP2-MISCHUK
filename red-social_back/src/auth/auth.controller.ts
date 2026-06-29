@@ -12,7 +12,6 @@ export class AuthController {
     return respuesta;
   }
 
-  
   @Post('autorizar')
   async autorizar(@Body('token') token: string) {
     return this.authService.validarToken(token);

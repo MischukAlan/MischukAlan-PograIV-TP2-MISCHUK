@@ -36,6 +36,7 @@ export class AuthService {
   }
 
   private generarToken(usuario: any) {
+    console.log("GENERANDO TOKEN DE 60 SEGUNDOS");
     const payload = {
       sub: usuario._id,
       email: usuario.email,
@@ -45,7 +46,7 @@ export class AuthService {
     const { password: basura, ...usuarioSinPassword } = usuario.toObject();
 
     return {
-      access_token: this.jwtService.sign(payload, { expiresIn: '12h' }),
+      access_token: this.jwtService.sign(payload, { expiresIn: '60s' }),
       usuario: usuarioSinPassword,
     };
   }

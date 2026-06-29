@@ -17,4 +17,9 @@ export class Navbar {
   }
 
 
+  cerrarSesion() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
+  }
+
 }

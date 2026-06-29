@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { supabase } from '../../supabase.client';
 import { Publicacion } from '../publicacion/publicacion';
 import { environment } from '../../../environments/environment';
+import { AlertService } from '../../service/alert';
 
 @Component({
   selector: 'app-muro',
@@ -31,7 +32,8 @@ export class Muro {
   listaPublicaciones = signal<any[]>([]);
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private alert:AlertService
   ) {}
 
 ngOnInit() {
@@ -81,7 +83,7 @@ actualizarPublicacion(res: any) {
 
       },
       error: (err) => {
-        console.log(err);
+        this.alert.error('intenta de nuevo.');
       }
     });
     
@@ -98,7 +100,7 @@ async subirImagen(event: any) {
     const { data } = supabase.storage.from('imagenes').getPublicUrl(fileName);
     
     this.nuevaPublicacion.imagenUrl = data.publicUrl;
-    alert('Imagen cargada correctamente');
+    this.alert.success('Imagen cargada correctamente');
     this.cargada.set(true)
   } catch (error) {
     console.error('Error al subir la imagen:', error);
