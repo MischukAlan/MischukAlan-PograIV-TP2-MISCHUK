@@ -6,13 +6,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-
     origin: [
-      'https://mischukalan-pograiv-tp2-mischuk.onrender.com', 
-      'http://localhost:4200'                            
+      'https://mischuk-alan-pogra-front.vercel.app', // Tu URL de Vercel actual
+      'http://localhost:4200'
     ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Agregamos OPTIONS
     credentials: true,
+    allowedHeaders: 'Origin,X-Requested-With,Content-Type,Accept,Authorization',
   });
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT ?? 3000);
