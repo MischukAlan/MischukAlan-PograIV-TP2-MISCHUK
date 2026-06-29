@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 import { Publicacion } from '../publicacion/publicacion';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-perfil',

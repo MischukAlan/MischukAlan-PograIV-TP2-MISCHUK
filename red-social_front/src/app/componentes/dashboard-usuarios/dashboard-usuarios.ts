@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RegistroService } from '../../service/registro.service';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../environments/environment';
 
 
 @Component({

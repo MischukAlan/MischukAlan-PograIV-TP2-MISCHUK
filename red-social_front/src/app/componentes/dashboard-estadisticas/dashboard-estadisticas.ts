@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { EstadisticasService } from '../../service/estadisticas.service';
 import { Chart } from 'chart.js/auto';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-dashboard-estadisticas',
@@ -15,7 +14,7 @@ export class DashboardEstadisticas {
 
   desde: string | null = null;
   hasta: string | null = null;
-  private url = environment.apiUrl;
+
 
   chartComentariosPorPublicacion: Chart | null = null;
   chartComentariosPorFecha: Chart | null = null;

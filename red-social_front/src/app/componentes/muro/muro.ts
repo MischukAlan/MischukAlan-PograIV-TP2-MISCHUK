@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { supabase } from '../../supabase.client';
 import { Publicacion } from '../publicacion/publicacion';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-muro',

@@ -3,7 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-publicacion-detalle',

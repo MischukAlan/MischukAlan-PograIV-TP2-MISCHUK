@@ -2,7 +2,7 @@ import { Component, Input, EventEmitter, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-publicacion',
