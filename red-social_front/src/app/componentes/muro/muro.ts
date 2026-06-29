@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { supabase } from '../../supabase.client';
 import { Publicacion } from '../publicacion/publicacion';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-muro',
@@ -17,8 +18,6 @@ export class Muro {
   paginaActual = 1;
   limitePorPagina = 3;
   cargada = signal<boolean>(false);
-  
-  
 
   
   usuario = {
@@ -69,7 +68,7 @@ actualizarPublicacion(res: any) {
   };
 
 
-  this.http.post('http://localhost:3000/publicaciones', data)
+  this.http.post(`${environment.apiUrl}/publicaciones`, data)
     .subscribe({
       next: (res: any) => {
         this.listaPublicaciones.update(lista => [res, ...lista]);
@@ -111,7 +110,7 @@ cargarMas() {
 }
 
 obtenerPublicaciones() {
-  const url = `http://localhost:3000/publicaciones?page=${this.paginaActual}&limit=5`;
+  const url = `${environment.apiUrl}/publicaciones?page=${this.paginaActual}&limit=5`;
   
   this.http.get<any[]>(url).subscribe(data => {
     if (this.paginaActual === 1) {

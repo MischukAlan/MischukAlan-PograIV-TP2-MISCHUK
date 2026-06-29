@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environment/environment';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class Login {
 
   correoElectronico: string = '';
   clave: string = '';
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private router: Router,
@@ -27,7 +29,7 @@ async iniciarSesion() {
     email: this.correoElectronico,
     password: this.clave
   };
-  this.http.post('http://localhost:3000/auth/login', credenciales)
+  this.http.post(`${this.apiUrl}/auth/login`, credenciales)
     .subscribe({
     next: (res: any) => {
       if (!res.ok) {

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { EstadisticasService } from '../../service/estadisticas.service';
 import { Chart } from 'chart.js/auto';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-dashboard-estadisticas',
@@ -14,17 +15,14 @@ export class DashboardEstadisticas {
 
   desde: string | null = null;
   hasta: string | null = null;
+  private url = environment.apiUrl;
 
-  // charts (para evitar duplicados)
   chartComentariosPorPublicacion: Chart | null = null;
   chartComentariosPorFecha: Chart | null = null;
   chartUsuarios: Chart | null = null;
 
   constructor(private estadisticasService: EstadisticasService) {}
 
-  // =========================
-  // UTILIDAD FECHAS
-  // =========================
   getDesdeHastaValidos() {
   if (!this.desde || !this.hasta) return null;
 
@@ -34,9 +32,6 @@ export class DashboardEstadisticas {
   };
 }
 
-  // =========================
-  // BOTÓN BUSCAR (ENTRYPOINT)
-  // =========================
   buscarEstadisticas() {
 
     const fechas = this.getDesdeHastaValidos();
@@ -55,9 +50,6 @@ export class DashboardEstadisticas {
     alert('Debes seleccionar fecha desde y hasta');
   }
 
-  // =========================
-  // 1. COMENTARIOS POR PUBLICACIÓN
-  // =========================
   cargarComentariosPorPublicacion() {
 
     const fechas = this.getDesdeHastaValidos();
@@ -92,9 +84,6 @@ export class DashboardEstadisticas {
       });
   }
 
-  // =========================
-  // 2. COMENTARIOS POR FECHA
-  // =========================
   cargarComentariosPorFecha() {
 
     const fechas = this.getDesdeHastaValidos();
@@ -124,9 +113,6 @@ export class DashboardEstadisticas {
       });
   }
 
-  // =========================
-  // 3. PUBLICACIONES POR USUARIO
-  // =========================
   cargarPublicacionesPorUsuario() {
 
     const fechas = this.getDesdeHastaValidos();

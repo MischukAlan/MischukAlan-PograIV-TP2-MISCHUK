@@ -2,6 +2,7 @@ import { Component, Input, EventEmitter, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-publicacion',
@@ -21,11 +22,9 @@ export class Publicacion {
   constructor(private http: HttpClient) {}
 
   darLike() {
-    this.http.patch(
-      `http://localhost:3000/publicaciones/${this.publicacion._id}/like`,
+    this.http.patch(`${environment.apiUrl}/publicaciones/${this.publicacion._id}/like`,
       { usuarioId: this.miUsuarioId }
     ).subscribe((res: any) => {
-
       this.publicacion = {
         ...this.publicacion,
         likes: res.likes
@@ -43,8 +42,7 @@ export class Publicacion {
 
   if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
     
-    this.http.patch(
-      `http://localhost:3000/publicaciones/${this.publicacion._id}`,
+    this.http.patch(`${environment.apiUrl}/publicaciones/${this.publicacion._id}`,
       {}  )
       .subscribe({
         next: () => {
@@ -60,7 +58,8 @@ export class Publicacion {
 
 obtenerPublicacionPorId(id: string) {
 
-  const url = `http://localhost:3000/publicaciones/${id}`;
+  const url = `${environment.apiUrl}publicaciones/${id}`;
+  console.log(url  )
   
   this.http.get<any>(url).subscribe({
     next: (data) => {this.publicacionSeleccionada = data},

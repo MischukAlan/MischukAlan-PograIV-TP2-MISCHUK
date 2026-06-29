@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RegistroService } from '../../service/registro.service';
+import { environment } from '../../../environment/environment';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class DashboardUsuarios implements OnInit {
   usuariosDesactivados = signal<any[]>([]);
   registroForm!: FormGroup;
   fotoPerfil = signal<File | null>(null);
+  private apiUrl = environment.apiUrl;
 
   constructor(
     private router: Router,
