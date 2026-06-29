@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { supabase } from '../supabase.client';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class RegistroService {
 
     return await firstValueFrom(
       this.http.post(
-        'http://localhost:3000/usuarios',
+        `${environment.apiUrl}/usuarios`,
         usuarioFinal
       )
     );

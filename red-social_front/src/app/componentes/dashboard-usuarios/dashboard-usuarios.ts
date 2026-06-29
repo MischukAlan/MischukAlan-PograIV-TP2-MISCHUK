@@ -67,14 +67,14 @@ seleccionarArchivo(event: any) {
 }
 
   cargarUsuarios() {
-    this.http.get<any[]>('http://localhost:3000/usuarios')
+    this.http.get<any[]>(`${environment.apiUrl}/usuarios`)
       .subscribe(data => {
         this.usuarios.set(data);
       });
   }
 
   cargarUsuariosDesactivados() {
-    this.http.get<any[]>('http://localhost:3000/usuarios/userDesactivados')
+    this.http.get<any[]>(`${environment.apiUrl}/usuarios/userDesactivados`)
       .subscribe(data_data => {
         this.usuariosDesactivados.set(data_data);
       });
@@ -113,7 +113,7 @@ async crearUsuario() {
 }
 
 desactivarUsuario(id: string) {
-  this.http.patch(`http://localhost:3000/usuarios/${id}/desactivar`, {})
+  this.http.patch(`${environment.apiUrl}/usuarios/${id}/desactivar`, {})
     .subscribe({
       next: () => {
         this.cargarUsuarios();
@@ -124,7 +124,7 @@ desactivarUsuario(id: string) {
 }
 
 activarUsuario(id: string) {
-  this.http.patch(`http://localhost:3000/usuarios/${id}/activar`, {})
+  this.http.patch(`${environment.apiUrl}/usuarios/${id}/activar`, {})
     .subscribe({
       next: () => {
         this.cargarUsuarios();

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 import { Publicacion } from '../publicacion/publicacion';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-perfil',
@@ -31,7 +32,7 @@ export class Perfil implements OnInit {
   }
 
   cargarPublicaciones(userId: string) {
-    this.http.get<any[]>(`http://localhost:3000/publicaciones?userId=${userId}&limit=5`)
+    this.http.get<any[]>(`${environment.apiUrl}/publicaciones?userId=${userId}&limit=5`)
       .pipe(
         catchError(error => {
           console.error('Error cargando publicaciones:', error);
@@ -46,7 +47,7 @@ export class Perfil implements OnInit {
   cargarComentarios(userId: string) {
     this.cargandoComentarios.set(true);
 
-    this.http.get<any[]>(`http://localhost:3000/comentarios?userId=${userId}`)
+    this.http.get<any[]>(`${environment.apiUrl}//comentarios?userId=${userId}`)
       .subscribe({
         next: (data) => {
           this.comentarios.set(data);

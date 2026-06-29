@@ -3,6 +3,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-publicacion-detalle',
@@ -35,11 +36,11 @@ export class PublicacionDetalle implements OnInit {
   }
 
   cargarDatos() {
-    this.http.get<any>(`http://localhost:3000/publicaciones/${this.publicacionId}`).subscribe({
+    this.http.get<any>(`${environment.apiUrl}/publicaciones/${this.publicacionId}`).subscribe({
       next: (data) => this.publicacion.set(data)
     });
 
-    this.http.get<any[]>(`http://localhost:3000/comentarios/${this.publicacionId}`).subscribe({
+    this.http.get<any[]>(`${environment.apiUrl}/comentarios/${this.publicacionId}`).subscribe({
       next: (data) => {
         const ordenados = [...data].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         this.comentarios.set(ordenados);
@@ -51,7 +52,7 @@ export class PublicacionDetalle implements OnInit {
     if (!this.nuevoComentarioTexto().trim()) return;
     this.enviandoComentario.set(true);
 
-    this.http.post('http://localhost:3000/comentarios', {
+    this.http.post(`${environment.apiUrl}/comentarios`, {
       texto: this.nuevoComentarioTexto(),
       publicacionId: this.publicacionId,
       usuarioId: this.usuarioID
@@ -74,7 +75,7 @@ export class PublicacionDetalle implements OnInit {
   }
 
   guardarEdicion() {
-    this.http.patch(`http://localhost:3000/comentarios/${this.comentarioEditando()._id}`, {
+    this.http.patch(`${environment.apiUrl}/comentarios/${this.comentarioEditando()._id}`, {
       texto: this.mensajeEditado()
     }).subscribe(() => {
       this.cargarDatos();
