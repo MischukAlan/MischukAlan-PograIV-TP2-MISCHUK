@@ -7,34 +7,24 @@ import { jwtDecode } from 'jwt-decode';
 
 export class TokenService {
     
-  private timeoutId: any;
-  iniciarTemporizador(callback: () => void) {
-
-  console.log("Entré al TokenService");
-
+iniciarTemporizador(callback: () => void) {
   const token = localStorage.getItem('token');
-  
-  console.log("Token:", token);
-
   if (!token) return;
 
-  const payload = JSON.parse(atob(token.split('.')[1]));
+  const payload: any = jwtDecode(token);
+  const exp = payload.exp * 1000; 
+  const ahora = Date.now();
+  const MARGEN_AVISO = 30000;
+  
+  const tiempoParaAviso = exp - ahora - MARGEN_AVISO;
 
-  console.log("Payload:", payload);
-
-  console.log("Exp:", payload.exp);
-
-  const tiempoRestante = payload.exp * 1000 - Date.now();
-
-  console.log("Tiempo restante:", tiempoRestante);
-  console.log("Tiempo restante (seg):", tiempoRestante / 1000);
-
-  const tiempoAviso = tiempoRestante - 30000;
-
-  console.log("Tiempo aviso:", tiempoAviso);
-
-  setTimeout(() => {
-    console.log("Entró al timeout");
-    callback();
-  }, tiempoAviso);
-  }}
+  console.log(`Faltan ${tiempoParaAviso / 1000} segundos para mostrar el aviso.`);
+  if (tiempoParaAviso <= 0) {
+    callback(); 
+  } else {
+    setTimeout(() => {
+      callback();
+    }, tiempoParaAviso);
+  }
+}
+}

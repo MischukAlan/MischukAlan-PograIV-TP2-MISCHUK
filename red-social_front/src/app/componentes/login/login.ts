@@ -17,45 +17,60 @@ import { AlertService } from '../../service/alert';
 
 
 export class Login {
-  
-
   correoElectronico: string = '';
   clave: string = '';
   private apiUrl = environment.apiUrl;
 
   constructor(
-  private router: Router,
-  private http: HttpClient,
-  private alert: AlertService,
-  private tokenService: TokenService
-) {}
+    private router: Router,
+    private http: HttpClient,
+    private alert: AlertService,
+    private tokenService: TokenService
+  ) {}
 
-
-async iniciarSesion() {
-  const credenciales = {
-    email: this.correoElectronico,
-    password: this.clave
-  };
-  this.http.post(`${this.apiUrl}/auth/login`, credenciales)
-    .subscribe({
-    next: (res: any) => {
-      console.log("Respuesta del serv", res);
-      if (!res.ok) {
-          this.alert.error('Credenciales inválidas, intenta de nuevo.');
-          return;
+  private configurarAvisoSesion() {
+    this.tokenService.iniciarTemporizador(async () => {
+      const extender = await this.alert.confirmSessionExtension();
+      if (extender) {
+        this.renovarSesion();
+      } else {
+        localStorage.clear();
+        this.router.navigate(['/login']);
       }
-      localStorage.setItem('token', res.access_token);
-      localStorage.setItem('usuario', JSON.stringify(res.usuario));
-      console.log("Iniciando temporizador");
-        this.tokenService.iniciarTemporizador(() => {
-          console.log("Quedan 30 segundos");
-        });
-      this.router.navigate(['/muro']);
-    },
-    error: () => {
-      this.alert.error('Credenciales inválidas, intenta de nuevo.');
-    }
-  });
+    });
+  }
+
+  async iniciarSesion() {
+    const credenciales = { email: this.correoElectronico, password: this.clave };
+    
+    this.http.post(`${this.apiUrl}/auth/login`, credenciales).subscribe({
+      next: (res: any) => {
+        if (!res.ok) {
+          this.alert.error('Credenciales inválidas.');
+          return;
+        }
+        localStorage.setItem('token', res.access_token);
+        localStorage.setItem('usuario', JSON.stringify(res.usuario));
+
+        this.configurarAvisoSesion();
+        this.router.navigate(['/muro']);
+      },
+      error: () => this.alert.error('Credenciales inválidas.')
+    });
+  }
+
+  renovarSesion() {
+    this.http.post(`${environment.apiUrl}/auth/refresh`, {}).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('token', res.access_token);
+        this.alert.success('Sesión extendida con éxito');
+        this.configurarAvisoSesion();
+      },
+      error: () => {
+        this.alert.error('Tu sesión ha finalizado');
+        localStorage.clear();
+        this.router.navigate(['/login']);
+      }
+    });
+  }
 }
-}
-  

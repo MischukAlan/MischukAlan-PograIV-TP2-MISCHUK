@@ -21,5 +21,30 @@ export class AlertService {
       confirmButtonColor: '#d33'
     });
   }
-  
+
+  confirmDelete(message: string = '¿Estás seguro de que deseas eliminar este elemento?'): Promise<boolean> {
+    return Swal.fire({
+      title: '¿Confirmar acción?',
+      text: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => result.isConfirmed);
+  }
+
+  confirmSessionExtension(): Promise<boolean> {
+    return Swal.fire({
+      title: '¡Tu sesión está por expirar!',
+      text: '¿Quieres seguir trabajando?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#7e22ce',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Extender sesión',
+      cancelButtonText: 'Cerrar sesión'
+    }).then((result) => result.isConfirmed);
+  }  
 }
