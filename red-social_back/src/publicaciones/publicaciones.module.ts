@@ -1,13 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-
 import { PublicacionesController } from './publicaciones.controller';
 import { PublicacionesService } from './publicaciones.service';
-
-import {
-  Publicaciones,
-  PublicacionesSchema
-} from './entities/publicaciones.entity';
+import { Publicaciones, PublicacionesSchema} from './entities/publicaciones.entity';
+import { Comentario, ComentarioSchema } from '../comentarios/entities/comentario.entity';
 
 @Module({
   imports: [
@@ -15,6 +11,10 @@ import {
       {
         name: Publicaciones.name,
         schema: PublicacionesSchema
+      },
+      {
+        name: Comentario.name,
+        schema: ComentarioSchema
       }
     ])
   ],
@@ -22,8 +22,6 @@ import {
   providers: [PublicacionesService],
 })
 export class PublicacionesModule {}
-
-
 
 
 

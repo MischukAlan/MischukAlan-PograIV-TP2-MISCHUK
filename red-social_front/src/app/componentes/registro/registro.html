@@ -53,6 +53,14 @@
                 <label class="block text-xs font-bold text-purple-900 mb-1">Email</label>
                 <input formControlName="email" type="email" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
             </div>
+
+           <div>
+            <select formControlName="perfil" class="border p-2 rounded">
+                <option value="usuario">Usuario</option>
+                <option value="administrador">Administrador</option>
+            </select>
+            </div>
+
             <div class="mt-2">
                 <label class="block text-xs font-bold text-purple-900 mb-1">Repetir Email</label>
                 <input formControlName="emailConfirm" type="email" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
@@ -85,6 +93,12 @@
             <button type="submit" class="w-full bg-purple-900 text-white font-bold py-3 rounded uppercase tracking-widest hover:bg-purple-950 transition-colors mt-8">
                 Registrarse
             </button>
+
+              <div class="w-full max-w-3xl flex justify-end mb-3">
+                
+
+            </div>
+
         </form>
     </div>
 </div>

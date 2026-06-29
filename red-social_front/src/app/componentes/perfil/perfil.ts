@@ -14,7 +14,10 @@ import { Publicacion } from '../publicacion/publicacion';
 export class Perfil implements OnInit {
   usuario = signal<any>(null);
   misPublicaciones = signal<any[]>([]);
+  comentarios = signal<any[]>([]);
+  cargandoComentarios = signal(false);
   pestana: 'publicaciones' | 'comentarios' = 'publicaciones';
+  misComentarios = signal<any[]>([]);
 
   constructor(private http: HttpClient) {}
 
@@ -22,11 +25,12 @@ export class Perfil implements OnInit {
     const userStorage = JSON.parse(localStorage.getItem('usuario') || '{}');
     if (userStorage._id) {
       this.usuario.set(userStorage);
-      this.cargarDatosUsuario(userStorage._id);
+      this.cargarPublicaciones(userStorage._id);
+      this.cargarComentarios(userStorage._id);
     }
   }
 
-  cargarDatosUsuario(userId: string) {
+  cargarPublicaciones(userId: string) {
     this.http.get<any[]>(`http://localhost:3000/publicaciones?userId=${userId}&limit=5`)
       .pipe(
         catchError(error => {
@@ -36,6 +40,22 @@ export class Perfil implements OnInit {
       )
       .subscribe(data => {
         this.misPublicaciones.set(data);
+      });
+  }
+
+  cargarComentarios(userId: string) {
+    this.cargandoComentarios.set(true);
+
+    this.http.get<any[]>(`http://localhost:3000/comentarios?userId=${userId}`)
+      .subscribe({
+        next: (data) => {
+          this.comentarios.set(data);
+          this.cargandoComentarios.set(false);
+        },
+        error: (err) => {
+          console.error("Error comentarios:", err);
+          this.cargandoComentarios.set(false);
+        }
       });
   }
 }

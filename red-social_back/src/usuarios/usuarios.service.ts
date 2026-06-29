@@ -26,10 +26,35 @@ export class UsuariosService {
 
   }
 
-  async findAll() {
-    return await this.usuarioModel.find().exec();
+  async removeLogica(id: string) {
+    return this.usuarioModel.findByIdAndUpdate(
+      id,
+      { activo: false },
+      { new: true }
+    );
   }
-  
+
+  async activar(id:string) {
+    return this.usuarioModel.findByIdAndUpdate(
+      id,
+      { activo: true },
+      { new: true }
+    );
+  }
+
+  async findAll() {
+    return this.usuarioModel
+      .find({ activo: true })
+      .sort({ nombre: 1 })
+      .exec();
+  }
+
+  async obtenerUusariosDesactivados() {
+    return await this.usuarioModel.find({
+      activo: false
+    });
+  }
+    
   async findOne(id: string) {
   return await this.usuarioModel.findById(id).exec();
   }

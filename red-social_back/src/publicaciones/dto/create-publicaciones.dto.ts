@@ -1,4 +1,4 @@
-import {IsString} from 'class-validator';
+import {IsString, IsOptional} from 'class-validator';
 
 
 export class CreatePublicacionesDto {
@@ -19,4 +19,8 @@ export class CreatePublicacionesDto {
 
   @IsString()
   fotoAutor!: string;
+
+  @IsOptional()
+  @IsString()
+  fotoAdjunta?: string;
 }

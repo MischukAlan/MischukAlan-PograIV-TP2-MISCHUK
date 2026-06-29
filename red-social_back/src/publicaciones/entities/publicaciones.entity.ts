@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+
 @Schema()
 export class Publicaciones extends Document {
 
@@ -21,6 +22,9 @@ export class Publicaciones extends Document {
 
   @Prop()
   fotoAutor!: string;
+
+  @Prop()
+  fotoAdjunta?: string;
 
   @Prop({ default: Date.now })
   fechaCreado!: Date;

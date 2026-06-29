@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -16,6 +16,9 @@ export class Muro {
 
   paginaActual = 1;
   limitePorPagina = 3;
+  cargada = signal<boolean>(false);
+  
+  
 
   
   usuario = {
@@ -25,30 +28,31 @@ export class Muro {
   };
 
   nuevaPublicacion = { titulo: '', mensaje: '', imagenUrl: '', usuarioId:"" };
-  listaPublicaciones: any[] = [];
+  listaPublicaciones = signal<any[]>([]);
 
   constructor(
     private http: HttpClient
   ) {}
 
 ngOnInit() {
-  console.log('Muro iniciado');
   this.obtenerPublicaciones();
   const user = JSON.parse(localStorage.getItem('usuario') || '{}'  );
-
   this.usuario.foto = user.fotoPerfil;
-  
-
   if (user && user._id) {
     this.nuevaPublicacion.usuarioId = user._id;}
-
   if (user && user.nombre) {
     this.usuario.nombre = user.nombre;
     this.usuario.fotoPublicacion = user.imagenUrl;
   }
 }
 
-
+actualizarPublicacion(res: any) {
+  this.listaPublicaciones.update(list =>
+    list.map(p =>
+      p._id === res._id ? res : p
+    )
+  );
+}
   enviarPublicacion() {
 
   const user = JSON.parse(localStorage.getItem('usuario') || '{}');
@@ -68,21 +72,16 @@ ngOnInit() {
   this.http.post('http://localhost:3000/publicaciones', data)
     .subscribe({
       next: (res: any) => {
-        this.listaPublicaciones.unshift(res);
+        this.listaPublicaciones.update(lista => [res, ...lista]);
         
         this.nuevaPublicacion.titulo = '';
         this.nuevaPublicacion.mensaje = '';
         this.nuevaPublicacion.imagenUrl = '';
+        this.cargada.set(false);
 
       },
       error: (err) => {
-
-        console.log('ERROR COMPLETO:', err);
-
-        console.log('ERROR BACKEND:', err.error);
-
-        console.log('MENSAJE:', err.error.message);
-
+        console.log(err);
       }
     });
     
@@ -100,6 +99,7 @@ async subirImagen(event: any) {
     
     this.nuevaPublicacion.imagenUrl = data.publicUrl;
     alert('Imagen cargada correctamente');
+    this.cargada.set(true)
   } catch (error) {
     console.error('Error al subir la imagen:', error);
   }
@@ -111,30 +111,32 @@ cargarMas() {
 }
 
 obtenerPublicaciones() {
-
   const url = `http://localhost:3000/publicaciones?page=${this.paginaActual}&limit=5`;
+  
   this.http.get<any[]>(url).subscribe(data => {
     if (this.paginaActual === 1) {
-      this.listaPublicaciones = data;
+      this.listaPublicaciones.set(data);
     } else {
-      this.listaPublicaciones = [...this.listaPublicaciones, ...data];
+      this.listaPublicaciones.update(listaActual => [...listaActual, ...data]);
     }
   });
 }
 
 cambiarOrden(event: any) {
-  const criterio = event.target.value;
+  const criterioOrden = event.target.value;
 
-  if (criterio === 'fecha') {
-    this.listaPublicaciones.sort((a, b) => 
-      new Date(b.fechaCreado).getTime() - new Date(a.fechaCreado).getTime()
-    );
-  } else if (criterio === 'likes') {
-    this.listaPublicaciones.sort((a, b) => 
-      b.likes.length - a.likes.length
-    );
-  }
+  this.listaPublicaciones.update(lista => {
+    const copia = [...lista];
+    if (criterioOrden === 'fecha') {
+      copia.sort((a, b) => 
+        new Date(b.fechaCreado).getTime() - new Date(a.fechaCreado).getTime()
+      );
+    } else if (criterioOrden === 'likes') {
+      copia.sort((a, b) => 
+        (b.likes?.length || 0) - (a.likes?.length || 0)
+      );
+    }
+    return copia;
+  });
 }
-
-
 }

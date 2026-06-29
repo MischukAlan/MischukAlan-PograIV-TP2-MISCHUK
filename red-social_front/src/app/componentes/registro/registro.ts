@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractContro
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { supabase } from '../../supabase.client';
+import { RegistroService } from '../../service/registro.service';
 
 @Component({
   selector: 'app-registro',
@@ -17,13 +17,14 @@ export class Registro {
   fotoPerfil!: File ;
   enProceso = false; 
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router , private registroService: RegistroService) {
     this.registroForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
       apellido: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
       username: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s0-9]+$/)]],
       fechaNacimiento: ['', Validators.required],
       descripcion: ['', Validators.required],
+      perfil: ['usuario', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       emailConfirm: ['', [Validators.required]],
       password: ['', [Validators.required, validadorContrasena()]],
@@ -32,47 +33,32 @@ export class Registro {
   }
 
   async registrar() {
-    if (this.registroForm.valid && this.fotoPerfil) {
-      
-      try {
-        const fileName = `fotoPerfil/${Date.now()}_${this.fotoPerfil.name}`;
 
-        await supabase.storage
-          .from('imagenes')
-          .upload(fileName, this.fotoPerfil);
+    if (this.registroForm.invalid || !this.fotoPerfil) {
+      this.registroForm.markAllAsTouched();
+      alert("Revisá los campos, hay errores o falta la foto");
+      return;
+    }
 
-        const { data } = supabase.storage
-          .from('imagenes')
-          .getPublicUrl(fileName);
+    try {
 
-        const { emailConfirm, passwordConfirm, ...datosParaBack } = this.registroForm.value;
-        
-        const usuarioFinal = {
-          ...datosParaBack,
-          perfil: 'usuario',
-          fotoPerfil: data.publicUrl
-        };
-        console.log("Enviando al backend:", usuarioFinal);
-        console.log(data.publicUrl);
-        this.http.post('http://localhost:3000/usuarios', usuarioFinal).subscribe({
-          next: () => {
-            alert('¡Usuario registrado!');
-            this.router.navigate(['/muro']);
-          },
-          error: (err) => {
-            console.error(err);
-            alert('Error: ' + (err.error?.message || 'Error en el servidor'));
-          }
-        });
+      await this.registroService.registrarUsuario(
+        this.registroForm.value,
+        this.fotoPerfil
+      );
 
-      } catch (e) {
-        this.registroForm.markAllAsTouched();
-      }
-   
-    } else {
-    this.registroForm.markAllAsTouched();
-    alert("Revisá los campos, hay errores o falta la foto");
-  }
+      alert("¡Usuario registrado!");
+
+      this.router.navigate(['/muro']);
+
+    } catch (err: any) {
+
+      console.error(err);
+
+      alert("Error al registrar usuario");
+
+    }
+
   }
   
  verificarCoincidencia(control: AbstractControl): ValidationErrors | null {
@@ -111,3 +97,5 @@ export function validadorContrasena(): ValidatorFn {
       return esValida ? null : { contrasenaInsegura: true };
     };
   }
+
+  

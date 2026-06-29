@@ -15,33 +15,64 @@
         </h2>
       </a>
     </div>
+    <a href="/dashboard-usuarios">holaaa</a>
+    <div></div>
+    <a href="/dashboard-estadisticas">stats</a>
   </div>
 
   <div class="col-span-3 border-r border-r-gray-300 flex flex-col items-center pt-10 px-4 overflow-y-auto shadow-[15px_0_20px_-15px_rgba(0,0,0,0.1),-15px_0_20px_-15px_rgba(0,0,0,0.1)]">
     
-    <div class="w-full max-w-3xl mt-8 p-5 bg-white border border-gray-200 rounded-2xl shadow-sm mb-10">
-      <input 
-        type="text" 
-        [(ngModel)]="nuevaPublicacion.titulo" 
-        placeholder="Título..." 
-        class="w-full border-b border-gray-300 p-2 mb-3 focus:outline-none" 
+   <div class="w-full max-w-3xl bg-white rounded-3xl border border-gray-200 shadow-md p-6 mb-8 mt-9 ">
+
+    <div class="flex gap-4">
+
+      <img
+        [src]="usuario.foto"
+        class="w-14 h-14 rounded-full object-cover border-2 border-purple-100 shadow-sm"
       />
 
-      <textarea 
-        [(ngModel)]="nuevaPublicacion.mensaje" 
-        placeholder="¿Qué estás pensando?" 
-        rows="1" 
-        class="w-full p-2 rounded-xl focus:outline-1 focus:outline-purple-400 resize-none border border-gray-200"
-      ></textarea>
-      
-      <div class="flex justify-end pt-1">
-        <button 
-          (click)="enviarPublicacion()" 
-          class="bg-purple-700 text-white px-5 py-1.5 rounded-xl text-sm font-semibold hover:bg-purple-800 transition-all"
-        >
-          Publicar
-        </button>
+      <div class="flex-1">
+
+        <input
+          type="text"
+          [(ngModel)]="nuevaPublicacion.titulo"
+          placeholder="Título de la publicación"
+          class="w-full text-xl font-semibold placeholder:text-gray-400 border-b border-gray-200 pb-3 focus:outline-none focus:border-purple-500 transition-all"
+        />
+
+        <textarea
+          [(ngModel)]="nuevaPublicacion.mensaje"
+          placeholder="¿Qué estás pensando?"
+          rows="4"
+          class="w-full mt-4 p-4 border border-gray-200 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
+        ></textarea>
+
+      <div class="flex justify-between items-center">
+       <label class="cursor-pointer inline-flex items-center gap-2 text-gray-600 hover:text-purple-700 transition">
+        <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8"/>
+        </svg>
+          <span *ngIf="!cargada()">
+            Subir imagen
+          </span>
+
+          <span *ngIf="cargada()"
+                class="flex items-center gap-1 font-medium">
+            ✓ Imagen cargada
+            <span class="text-sm">Subir imagen</span><input type="file" (change)="subirImagen($event)" accept="image/*"class="hidden"/>
+          </span>
+
+        </label>
+
+          <button
+            (click)="enviarPublicacion()"
+            class="px-7 mt-1 py-2.5 bg-purple-700 hover:bg-purple-800 text-white font-semibold rounded-full shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
+            Publicar
+          </button>
+        </div>
       </div>
+
+    </div>
     </div>
 
     <div class="w-full max-w-3xl flex justify-end mb-3">
@@ -56,13 +87,15 @@
     </div>
 
     <div class="w-full max-w-3xl flex flex-col gap-4 mb-4">
-      <app-publicacion 
-        *ngFor="let p of listaPublicaciones" 
-        [publicacion]="p"
-        (eliminada)="obtenerPublicaciones()">
-      </app-publicacion>
-    </div>
 
+      <app-publicacion
+        *ngFor="let p of listaPublicaciones()"
+        [publicacion]="p"
+        (eliminada)="obtenerPublicaciones()"
+        (likeCambiado)="actualizarPublicacion($event)">
+      </app-publicacion>
+
+    </div>
     <div class="flex justify-center  mb-4">
         <button 
           (click)="cargarMas()" 

@@ -12,6 +12,22 @@ export class UsuariosController {
     return this.usuariosService.create(createUsuarioDto);
   }
 
+  @Patch(':id/desactivar')
+  removeLogica(@Param('id') id: string) {
+    return this.usuariosService.removeLogica(id);
+  }
+
+  @Get('userDesactivados')
+    async obtenerUusariosDesactivados() {
+    return await this.usuariosService.obtenerUusariosDesactivados();
+  }
+
+
+  @Patch(':id/activar')
+  activar(@Param('id') id: string) {
+    return this.usuariosService.activar(id);
+  }
+
   @Get()
   findAll() {
     return this.usuariosService.findAll();

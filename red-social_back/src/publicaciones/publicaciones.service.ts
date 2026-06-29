@@ -24,27 +24,54 @@ async create(dto: CreatePublicacionesDto) {
   }
 
 async findAll() {
-return await this.publicacionModel.find().sort({ fechaCreado: -1 }).exec();
+return await this.publicacionModel
+  .find({ activa: true })
+  .sort({ fechaCreado: -1 })
+  .exec();
 }
 
 async removeAll() {
   return await this.publicacionModel.deleteMany({});
 }
 
-async remove(id: string) {
-  return await this.publicacionModel.findByIdAndDelete(id);
+async removeLogica(id: string) {
+  return await this.publicacionModel.findByIdAndUpdate(
+    id,
+    {activa: false},
+    {
+      new: true
+    }
+  );
 }
 
-async findPaginated(page: number, limit: number) {
+async buscarConPaginado(page: number, limit: number, userId?: string) {
   const skip = (page - 1) * limit;
+  const filtro: any = {
+    activa: true
+  };
+
+  if (userId) {
+    filtro.usuarioId = userId;
+  }
+
   return await this.publicacionModel
-    .find()
+    .find(filtro)
     .sort({ fechaCreado: -1 })
     .skip(skip)
     .limit(limit)
     .exec();
 }
+async findOne(id: string) {
+  return this.publicacionModel
+    .findOne({ _id: id, activa: true })
+    .exec();
+}
 
+  async obtenerEliminadas() {
+    return await this.publicacionModel.find({
+      activa: false
+    });
+  }
 
 async likePublicacion(id: string, usuarioId: string) {
   const publicacion = await this.publicacionModel.findById(id);
@@ -52,19 +79,12 @@ async likePublicacion(id: string, usuarioId: string) {
   if (!publicacion) throw new Error('Publicación no encontrada');
 
   const yaDioLike = publicacion.likes.includes(usuarioId);
-
+  
   if (yaDioLike) {
-    return await this.publicacionModel.findByIdAndUpdate(
-      id,
-      { $pull: { likes: usuarioId } },
-      { new: true }
-    );
-  } else {
-    return await this.publicacionModel.findByIdAndUpdate(
-      id,
-      { $addToSet: { likes: usuarioId } },
-      { new: true }
-    );
+    return await this.publicacionModel.findByIdAndUpdate(id,{ $pull: { likes: usuarioId } },{ new: true });
+  } 
+  else {
+    return await this.publicacionModel.findByIdAndUpdate(id,{ $addToSet: { likes: usuarioId } },{ new: true });
   }
 }
 

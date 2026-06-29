@@ -28,6 +28,6 @@ export class CreateUsuarioDto {
   descripcion!: string;
   
   @IsString()
-  perfil!: string;
+  perfil!: "usuario" | "administrador";
 
 }

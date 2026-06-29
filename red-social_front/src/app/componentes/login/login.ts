@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-login',
@@ -22,24 +23,25 @@ export class Login {
   ) {}
 
 async iniciarSesion() {
-  console.log("¡Hiciste click! Intentando loguear con:", this.correoElectronico);
-
   const credenciales = {
     email: this.correoElectronico,
     password: this.clave
   };
-
   this.http.post('http://localhost:3000/auth/login', credenciales)
     .subscribe({
-      next: (res: any) => {
-        console.log("Respuesta del servidor:", res);
-        localStorage.setItem('usuario', JSON.stringify(res.usuario));
-        this.router.navigate(['/muro']);
-      },
-      error: (err) => {
-        console.error("Error capturado en el subscribe:", err);
-        alert('Error: ' + JSON.stringify(err));
+    next: (res: any) => {
+      if (!res.ok) {
+          alert(res.message);
+          return;
       }
-    });
+
+      localStorage.setItem('usuario', JSON.stringify(res.usuario));
+      this.router.navigate(['/muro']);
+    },
+    error: () => {
+      alert('Credenciales inválidas');
+    }
+  });
 }
 }
+  

@@ -9,6 +9,11 @@ export class PublicacionesController {
   constructor(
     private readonly publicacionesService: PublicacionesService
   ) {  }
+  
+  @Patch(':id')
+  async removeLogica(@Param('id') id: string) {
+  return await this.publicacionesService.removeLogica(id);
+  }
 
   @Patch(':id/like')
   async likePublicacion(@Param('id') id: string, @Body('usuarioId') usuarioId: string) {
@@ -17,24 +22,32 @@ export class PublicacionesController {
 
   @Post()
   create(
-    @Body() dto: CreatePublicacionesDto
-  ) {return this.publicacionesService.create(dto);
-
-  }
+    @Body() dto: CreatePublicacionesDto)
+    {
+      return this.publicacionesService.create(dto);
+    }
 
   @Get()
-  async findAll(@Query('page') page = 1, @Query('limit') limit = 5) {
-  return await this.publicacionesService.findPaginated(Number(page), Number(limit));
+  async findAll(
+    @Query('page') page = 1,  @Query('limit') limit = 5,  @Query('userId') userId?: string) {
+    return await this.publicacionesService.buscarConPaginado(Number(page), Number(limit), userId);
+  }
+  
+  @Get('eliminadas')
+  async obtenerEliminadas() {
+  return await this.publicacionesService.obtenerEliminadas();
 }
 
-    @Delete('eliminar-todo')
-    removeAll() {
-    return this.publicacionesService.removeAll();
-    }
+  @Get(':id')
+  async get(@Param('id') id: string) {
+  return await this.publicacionesService.findOne(id);
+  }
 
-    @Delete(':id')
-    async remove(@Param('id') id: string) {
-    return await this.publicacionesService.remove(id);
-    }
+  @Delete('eliminar-todo')
+  removeAll() {
+  return this.publicacionesService.removeAll();
+  }
+  
+
   
 }

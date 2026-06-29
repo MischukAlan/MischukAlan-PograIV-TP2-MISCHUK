@@ -8,16 +8,15 @@ export class AuthController {
 
   @Post('login')
   async login(@Body() body: any) {
-    return this.authService.login(body.email, body.password);
+    const respuesta = await this.authService.login(body.email, body.password);
+    return respuesta;
   }
 
+  
   @Post('autorizar')
   async autorizar(@Body('token') token: string) {
     return this.authService.validarToken(token);
   }
-
-  @Post('refrescar')
-  async refrescar(@Body('token') token: string) {
-    return this.authService.refrescarToken(token);
-  }
+  
 }
+
