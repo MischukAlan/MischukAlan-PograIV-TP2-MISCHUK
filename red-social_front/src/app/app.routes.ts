@@ -1,4 +1,5 @@
 import { authGuard } from './guards/auth-guard';
+import { rolGuard } from './guards/rol-guard';
 import { Routes } from '@angular/router';
 import { Login } from './componentes/login/login';
 import { Perfil } from './componentes/perfil/perfil';
@@ -7,6 +8,7 @@ import { Registro } from './componentes/registro/registro';
 import { PublicacionDetalle } from './componentes/publicacion-detalle/publicacion-detalle';
 import { DashboardUsuarios } from './componentes/dashboard-usuarios/dashboard-usuarios';
 import { DashboardEstadisticas } from './componentes/dashboard-estadisticas/dashboard-estadisticas';
+
 
 export const routes: Routes = [
 
@@ -18,25 +20,27 @@ export const routes: Routes = [
     
     {path: 'perfil', 
         component: Perfil,
-        // canActivate: [authGuard]        
+        canActivate: [authGuard]        
     },
 
     {path: 'dashboard-usuarios', 
         component: DashboardUsuarios,
-        // canActivate: [authGuard]        
+        canActivate: [rolGuard],
+        data: { expectedRole: 'administrador' }         
     },
 
     {path: 'dashboard-estadisticas', 
         component: DashboardEstadisticas,
-        // canActivate: [authGuard]        
+        canActivate: [rolGuard],
+        data: { expectedRole: 'administrador' }      
     },
     
     {path: 'muro',
         component: Muro,
-        // canActivate: [authGuard]
+        canActivate: [authGuard]
     },
     
-    {path: 'publicacion-detalle/:id', component: PublicacionDetalle},   
+    {path: 'publicacion-detalle/:id', component: PublicacionDetalle, canActivate: [authGuard]},   
     
     {path: '**', component: Error},    
 

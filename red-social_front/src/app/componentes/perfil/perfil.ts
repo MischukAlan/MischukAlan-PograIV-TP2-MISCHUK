@@ -27,7 +27,7 @@ export class Perfil implements OnInit {
     if (userStorage._id) {
       this.usuario.set(userStorage);
       this.cargarPublicaciones(userStorage._id);
-      this.cargarComentarios(userStorage._id);
+      // this.cargarComentarios(userStorage._id);
     }
   }
 
@@ -44,19 +44,20 @@ export class Perfil implements OnInit {
       });
   }
 
-  cargarComentarios(userId: string) {
-    this.cargandoComentarios.set(true);
+//   cargarComentarios(userId: string) {
+//     this.cargandoComentarios.set(true);
 
-    this.http.get<any[]>(`${environment.apiUrl}//comentarios?userId=${userId}`)
-      .subscribe({
-        next: (data) => {
-          this.comentarios.set(data);
-          this.cargandoComentarios.set(false);
-        },
-        error: (err) => {
-          console.error("Error comentarios:", err);
-          this.cargandoComentarios.set(false);
-        }
-      });
-  }
+//     this.http.get<any[]>(`${environment.apiUrl}//comentarios?userId=${userId}`)
+//       .subscribe({
+//         next: (data) => {
+//           this.comentarios.set(data);
+//           this.cargandoComentarios.set(false);
+//         },
+//         error: (err) => {
+//           console.error("Error comentarios:", err);
+//           this.cargandoComentarios.set(false);
+//         }
+//       });
+//   }
+// }
 }

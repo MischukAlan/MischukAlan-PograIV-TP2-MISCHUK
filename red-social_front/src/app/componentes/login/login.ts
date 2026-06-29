@@ -32,11 +32,12 @@ async iniciarSesion() {
   this.http.post(`${this.apiUrl}/auth/login`, credenciales)
     .subscribe({
     next: (res: any) => {
+      console.log("Respuesta del servidor:", res);
       if (!res.ok) {
           alert(res.message);
           return;
       }
-
+      localStorage.setItem('token', res.access_token);
       localStorage.setItem('usuario', JSON.stringify(res.usuario));
       this.router.navigate(['/muro']);
     },
