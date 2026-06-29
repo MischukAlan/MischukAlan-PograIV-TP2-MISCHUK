@@ -13,11 +13,12 @@
         <h2 class="leading-0 text-xs font-semibold transition-colors text-purple-700 ">
           Ir a mi perfil
         </h2>
+        <div></div>
+        <a href="/dashboard-usuarios" class="leading-0 text-xs font-semibold transition-colors text-purple-700">Dashboar usuario</a>
+        <div></div>
+        <a href="/dashboard-estadisticas" class="leading-0 text-xs font-semibold transition-colors text-purple-700">Estadisticas</a>
       </a>
     </div>
-    <a href="/dashboard-usuarios">holaaa</a>
-    <div></div>
-    <a href="/dashboard-estadisticas">stats</a>
   </div>
 
   <div class="col-span-3 border-r border-r-gray-300 flex flex-col items-center pt-10 px-4 overflow-y-auto shadow-[15px_0_20px_-15px_rgba(0,0,0,0.1),-15px_0_20px_-15px_rgba(0,0,0,0.1)]">
@@ -61,14 +62,6 @@
             ✓ Imagen cargada
             <span class="text-sm">Subir imagen</span><input type="file" (change)="subirImagen($event)" accept="image/*"class="hidden"/>
           </span>
-
-            <input
-              id="imagen"
-              type="file"
-              hidden
-              accept="image/*"
-              (change)="subirImagen($event)">
-
 
         </label>
 
