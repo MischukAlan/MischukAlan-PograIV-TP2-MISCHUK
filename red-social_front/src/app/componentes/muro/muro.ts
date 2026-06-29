@@ -18,6 +18,7 @@ export class Muro {
   paginaActual = 1;
   limitePorPagina = 3;
   cargada = signal<boolean>(false);
+  private baseUrl = 'https://mischukalan-pograiv-tp2-mischuk.onrender.com';
 
   
   usuario = {
@@ -110,7 +111,7 @@ cargarMas() {
 }
 
 obtenerPublicaciones() {
-  const url = `${environment.apiUrl}/publicaciones?page=${this.paginaActual}&limit=5`;
+  const url = `${this.baseUrl}/publicaciones?page=${this.paginaActual}&limit=5`;
   
   this.http.get<any[]>(url).subscribe(data => {
     if (this.paginaActual === 1) {
