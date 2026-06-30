@@ -45,7 +45,7 @@ export class AuthService {
     const { password: basura, ...usuarioSinPassword } = usuario.toObject();
 
     return {
-      access_token: this.jwtService.sign(payload, { expiresIn: '12h' }),
+      access_token: this.jwtService.sign(payload),
       usuario: usuarioSinPassword,
     };
   }
