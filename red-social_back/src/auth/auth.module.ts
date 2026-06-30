@@ -22,7 +22,7 @@ import { Usuario, UsuarioSchema } from '../usuarios/entities/usuario.entity';
     JwtModule.register({
       global: true,
       secret: 'MiClaveSecreta',
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '2h' },
     }),
   ],
 
