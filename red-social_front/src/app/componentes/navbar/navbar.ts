@@ -22,4 +22,8 @@ export class Navbar {
     this.router.navigate(['/login']);
   }
 
+  mostrarBotonSesion(): boolean {
+  return this.router.url !== '/login' && this.router.url !== '/registro';
+}
+
 }

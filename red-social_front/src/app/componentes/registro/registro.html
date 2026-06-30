@@ -1,5 +1,5 @@
 <div class="grid grid-cols-2 min-h-screen">
-    <div class="col-span-1 pr-20 flex flex-col justify-center items-end mt-20">
+    <div class="col-span-1 pr-20 flex flex-col justify-center items-end">
         <h1 class="text-9xl text-purple-600 leading-[0.5]" style="font-family: 'Black Ops One'">CREA</h1>
         <h2 class="text-4xl mr-2 font-bold text-black leading-none mt-2">UNA</h2>
         <h3 class="text-4xl font-bold text-black leading-none">CUENTA</h3>
@@ -8,12 +8,12 @@
 
     <div class="col-span-1 flex items-center h-screen">
         <form [formGroup]="registroForm" (ngSubmit)="registrar()" class="bg-white p-4 w-full max-w-xl h-[90vh] overflow-y-auto pr-6">
-            <div class="text-left mb-4 mt-6">
+            <div class="text-left mb-4">
                 <h2 class="text-2xl font-bold text-black ml-1 leading-none  uppercase">sign</h2>
                 <p class="text-8xl text-purple-600 -mt-2" style="font-family: 'Black Ops One';">UP</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-2 gap-1">
                 <div>
                     <label class="block text-xs font-bold text-purple-900 mb-1">Nombre</label>
                     <input formControlName="nombre" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
@@ -54,17 +54,7 @@
                 <input formControlName="email" type="email" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
             </div>
 
-           <div>
-            <select formControlName="perfil" class="border p-2 rounded">
-                <option value="usuario">Usuario</option>
-                <option value="administrador">Administrador</option>
-            </select>
-            </div>
 
-            <div class="mt-2">
-                <label class="block text-xs font-bold text-purple-900 mb-1">Repetir Email</label>
-                <input formControlName="emailConfirm" type="email" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
-            </div>
 
             <div class="mt-2">
                 <label class="block text-xs font-bold text-purple-900 mb-1">Contraseña</label>
@@ -94,7 +84,12 @@
                 Registrarse
             </button>
 
-              <div class="w-full max-w-3xl flex justify-end mb-3">
+              <div class="w-full max-w-3xl flex justify-center mb-3">
+                  <div class="text-center pt-2">
+                        <a routerLink="/login" class="text-slate-600 text-sm font-medium cursor-default">
+                            ¿Ya tenés cuenta? <span class="text-sky-500 cursor-pointer font-bold tracking-wider hover:underline">Logeate</span>
+                        </a>
+                </div>
                 
 
             </div>

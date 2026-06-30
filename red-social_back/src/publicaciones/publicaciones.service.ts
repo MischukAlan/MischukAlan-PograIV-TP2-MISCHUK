@@ -61,6 +61,7 @@ async buscarConPaginado(page: number, limit: number, userId?: string) {
     .limit(limit)
     .exec();
 }
+
 async findOne(id: string) {
   return this.publicacionModel
     .findOne({ _id: id, activa: true })
