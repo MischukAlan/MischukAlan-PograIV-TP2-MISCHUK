@@ -62,6 +62,13 @@
             ✓ Imagen cargada
             <span class="text-sm">Subir imagen</span><input type="file" (change)="subirImagen($event)" accept="image/*"class="hidden"/>
           </span>
+          
+          <input
+              id="imagen"
+              type="file"
+              hidden
+              accept="image/*"
+              (change)="subirImagen($event)">
 
         </label>
 
