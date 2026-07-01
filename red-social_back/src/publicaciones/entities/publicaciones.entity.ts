@@ -5,10 +5,10 @@ import { Document } from 'mongoose';
 @Schema()
 export class Publicaciones extends Document {
 
-  @Prop({ required: true })
+  @Prop()
   titulo!: string;
 
-  @Prop({ required: true })
+  @Prop()
   mensaje!: string;
 
   @Prop()

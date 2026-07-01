@@ -35,10 +35,7 @@ export class RegistroService {
     };
 
     return await firstValueFrom(
-      this.http.post(
-        `${environment.apiUrl}/usuarios`,
-        usuarioFinal
-      )
+      this.http.post(`${environment.apiUrl}/auth/registrar`, usuarioFinal)
     );
   }
 

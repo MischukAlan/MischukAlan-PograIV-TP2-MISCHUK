@@ -25,7 +25,7 @@ export class Registro {
       nombre: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
       apellido: ['', [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/)]],
       username: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s0-9]+$/)]],
-      fechaNacimiento: ['', Validators.required],
+      fechaNacimiento: ['', [Validators.required,fechaNacimientoValidator()]],
       descripcion: ['', Validators.required],
       perfil: ['usuario', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -41,7 +41,7 @@ export class Registro {
       this.alertService.error(this.mensajeError)
       return;
     }
-    
+
     if (fechaControl?.hasError('menorDeEdad')) {
       this.mensajeError = fechaControl.getError('menorDeEdad').mensaje;
       this.alertService.error(this.mensajeError)
@@ -53,49 +53,110 @@ export class Registro {
       this.alertService.error(this.mensajeError)
       return;
     }
-
+    
     if (this.registroForm.invalid || !this.fotoPerfil) {
       this.registroForm.markAllAsTouched();
-      alert("Revisá los campos, hay errores o falta la foto");
+      this.alertService.error("Error en los campos, revisa y volver a enviar")
       return;
     }
 
     try {
-
-      await this.registroService.registrarUsuario(
+      const respuesta: any = await this.registroService.registrarUsuario(
         this.registroForm.value,
         this.fotoPerfil
       );
 
-      alert("¡Usuario registrado!");
+      localStorage.setItem('token', respuesta.access_token);
+      localStorage.setItem('usuario', JSON.stringify(respuesta.usuario));
 
-      this.router.navigate(['/muro']);
+      const ok = await this.alertService.confirm();
+        if (ok) {
+          this.router.navigate(['/muro']);
+        }
 
-    } catch (err: any) {
+      
+    } catch (err: any) {  
+      const backendError = err.error;
+      console.log(backendError.campo)
 
-      console.error(err);
-
-      alert("Error al registrar usuario");
-
-    }
+      if (backendError.campo === 'email') {
+        this.registroForm.get('email')?.setErrors({ existe: true });
+        this.alertService.error("mail duplicado")
+      }
+      
+      if (backendError.campo === 'username' || backendError.campo === undefined  ) {
+        this.registroForm.get('username')?.setErrors({ existe: true });
+        this.alertService.error("Username duplicado")
+      }
+        }
 
   }
   
- verificarCoincidencia(control: AbstractControl): ValidationErrors | null {
+  verificarCoincidencia(control: AbstractControl): ValidationErrors | null {
 
-  const pass = control.get('password')?.value;
-  const passConf = control.get('passwordConfirm')?.value;
+    const pass = control.get('password')?.value;
+    const passConf = control.get('passwordConfirm')?.value;
 
-  const passCoinciden = pass === passConf;
+    const passCoinciden = pass === passConf;
 
-  return (passCoinciden) ? null : { noCoincide: true };
-}
+    return (passCoinciden) ? null : { noCoincide: true };
+  }
 
   seleccionarArchivo(event: any) {
     const file: File = event.target.files[0];
     if (file) {
       this.fotoPerfil = file;
     }
+  }
+
+  tieneError(campo: string): boolean {
+  const control = this.registroForm.get(campo);
+  return !!(control && control.invalid && control.touched);
+}
+
+  obtenerErrores(): string[] {
+    const errores: string[] = [];
+
+    Object.keys(this.registroForm.controls).forEach(campo => {
+      const control = this.registroForm.get(campo);
+
+      if (control?.errors) {
+
+        if (control.errors['required']) {
+          errores.push(`${campo} es obligatorio`);
+        }
+
+        if (control.errors['minlength']) {
+          errores.push(`${campo} debe tener al menos ${control.errors['minlength'].requiredLength} caracteres`);
+        }
+
+        if (control.errors['pattern']) {
+          errores.push(`${campo} tiene un formato inválido`);
+        }
+
+        if (control.errors['email']) {
+          errores.push('El email no es válido');
+        }
+
+        if (control.errors['contrasenaInsegura']) {
+          errores.push('La contraseña no cumple los requisitos');
+        }
+
+        if (control.errors['fechaFutura']) {
+          errores.push(control.errors['fechaFutura'].mensaje);
+        }
+
+        if (control.errors['menorDeEdad']) {
+          errores.push(control.errors['menorDeEdad'].mensaje);
+        }
+
+        if (control.errors['mayorDeEdad']) {
+          errores.push(control.errors['mayorDeEdad'].mensaje);
+        }
+      }
+    });
+
+    return errores;
   }
   
   
@@ -153,5 +214,7 @@ export function validadorContrasena(): ValidatorFn {
     return null;
   };
 }
+
+
 
   

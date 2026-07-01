@@ -47,4 +47,15 @@ export class AlertService {
       cancelButtonText: 'Cerrar sesión'
     }).then((result) => result.isConfirmed);
   }  
+
+  confirm(): Promise<boolean> {
+    return Swal.fire({
+        icon: 'success',
+        title: 'Registro exitoso',
+        text: 'Tu cuenta fue creada correctamente',
+        confirmButtonText: 'OK',
+        allowOutsideClick: false,
+        allowEscapeKey: false
+    }).then((result) => result.isConfirmed);
+  }  
 }

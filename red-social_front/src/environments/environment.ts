@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
-  apiUrl: 'https://mischukalan-pograiv-tp2-mischuk.onrender.com'
+  production: false,
+  apiUrl: 'http://localhost:3000'
 };

@@ -1,5 +1,9 @@
+
 <div class="grid grid-cols-5 min-h-screen">
-  
+  <div *ngIf="cargando()" class="fixed inset-0 bg-black/20 flex items-center justify-center z-50">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+  </div>
+
   <div class="col-span-1 border-r border-r-gray-300">
     <div class="group sticky top-1/2 -translate-y-1/2 flex flex-col items-center">
       <a href="/perfil" class="group flex flex-col items-center gap-4">
@@ -13,12 +17,11 @@
         <h2 class="leading-0 text-xs font-semibold transition-colors text-purple-700 ">
           Ir a mi perfil
         </h2>
-        <div></div>
-        <a href="/dashboard-usuarios" class="leading-0 text-xs font-semibold transition-colors text-purple-700">Dashboar usuario</a>
-        <div></div>
-        <a href="/dashboard-estadisticas" class="leading-0 text-xs font-semibold transition-colors text-purple-700">Estadisticas</a>
       </a>
     </div>
+    <a href="/dashboard-usuarios">holaaa</a>
+    <div></div>
+    <a href="/dashboard-estadisticas">stats</a>
   </div>
 
   <div class="col-span-3 border-r border-r-gray-300 flex flex-col items-center pt-10 px-4 overflow-y-auto shadow-[15px_0_20px_-15px_rgba(0,0,0,0.1),-15px_0_20px_-15px_rgba(0,0,0,0.1)]">
@@ -53,22 +56,18 @@
         <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8v8a5 5 0 1 0 10 0V6.5a3.5 3.5 0 1 0-7 0V15a2 2 0 0 0 4 0V8"/>
         </svg>
+        <input type="file" (change)="subirImagen($event)" accept="image/*"class="hidden"/>
+        
           <span *ngIf="!cargada()">
             Subir imagen
           </span>
 
-          <span *ngIf="cargada()"
-                class="flex items-center gap-1 font-medium">
+          <span *ngIf="cargada()" class="flex items-center gap-1 font-medium">
             ✓ Imagen cargada
-            <span class="text-sm">Subir imagen</span><input type="file" (change)="subirImagen($event)" accept="image/*"class="hidden"/>
           </span>
-          
-          <input
-              id="imagen"
-              type="file"
-              hidden
-              accept="image/*"
-              (change)="subirImagen($event)">
+
+
+
 
         </label>
 

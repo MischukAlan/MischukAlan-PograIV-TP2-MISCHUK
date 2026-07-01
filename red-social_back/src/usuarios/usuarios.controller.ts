@@ -7,10 +7,6 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
-  @Post()
-  create(@Body() createUsuarioDto: CreateUsuarioDto) {
-    return this.usuariosService.create(createUsuarioDto);
-  }
 
   @Patch(':id/desactivar')
   removeLogica(@Param('id') id: string) {
@@ -39,9 +35,19 @@ export class UsuariosController {
   }
 
   @Patch(':id')
+  editar(
+    @Param('id') id: string,
+    @Body() updateUsuarioDto: UpdateUsuarioDto,
+  ) {
+    return this.usuariosService.editar(id, updateUsuarioDto);
+  }
+
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateUsuarioDto: UpdateUsuarioDto) {
     return this.usuariosService.update(id, updateUsuarioDto); 
   }
+
+
 
   @Delete(':id')
   remove(@Param('id') id: string) {

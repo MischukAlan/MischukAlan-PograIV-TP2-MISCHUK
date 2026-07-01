@@ -19,24 +19,24 @@ export class Muro {
   paginaActual = 1;
   limitePorPagina = 3;
   cargada = signal<boolean>(false);
-  private baseUrl = 'https://mischukalan-pograiv-tp2-mischuk.onrender.com';
-
-  
   usuario = {
     nombre: '',
     fotoPublicacion: '',
     foto: ''
   };
-
+  
   nuevaPublicacion = { titulo: '', mensaje: '', imagenUrl: '', usuarioId:"" };
   listaPublicaciones = signal<any[]>([]);
-
+  cargando = signal(true);
+  private apiUrl = environment.apiUrl;
+  
   constructor(
     private http: HttpClient,
-    private alert:AlertService
+    private alert:AlertService,
   ) {}
 
 ngOnInit() {
+  this.cargando.set(true)
   this.obtenerPublicaciones();
   const user = JSON.parse(localStorage.getItem('usuario') || '{}'  );
   this.usuario.foto = user.fotoPerfil;
@@ -56,11 +56,8 @@ actualizarPublicacion(res: any) {
   );
 }
   enviarPublicacion() {
-
   const user = JSON.parse(localStorage.getItem('usuario') || '{}');
-
   const data = {
-
     titulo: this.nuevaPublicacion.titulo,
     mensaje: this.nuevaPublicacion.mensaje,
     imagenUrl: this.nuevaPublicacion.imagenUrl,
@@ -69,8 +66,21 @@ actualizarPublicacion(res: any) {
     fotoAutor: user.fotoPerfil
 
   };
+  const titulo = this.nuevaPublicacion.titulo?.trim();
+  const mensaje = this.nuevaPublicacion.mensaje?.trim();
+  const imagen = this.nuevaPublicacion.imagenUrl?.trim();
 
+  if (!titulo && !mensaje && !imagen) {
+    this.alert.error('No podés publicar algo vacío.');
+    return;
+  }
 
+  if ((titulo && titulo.length === 0) || (mensaje && mensaje.length === 0)) {
+    this.alert.error('No se permiten espacios vacíos.');
+    return;
+  }
+
+  
   this.http.post(`${environment.apiUrl}/publicaciones`, data)
     .subscribe({
       next: (res: any) => {
@@ -113,13 +123,35 @@ cargarMas() {
 }
 
 obtenerPublicaciones() {
-  const url = `${this.baseUrl}/publicaciones?page=${this.paginaActual}&limit=5`;
+  const start = Date.now();
+  const url = `${this.apiUrl}/publicaciones?page=${this.paginaActual}&limit=5`;
+
+  if (this.paginaActual === 1) {
+    this.cargando.set(true);
+  } 
+
   
-  this.http.get<any[]>(url).subscribe(data => {
-    if (this.paginaActual === 1) {
-      this.listaPublicaciones.set(data);
-    } else {
-      this.listaPublicaciones.update(listaActual => [...listaActual, ...data]);
+  this.http.get<any[]>(url).subscribe({
+    next: (data) => {
+      if (this.paginaActual === 1) {
+        this.listaPublicaciones.set(data);
+      } else {
+        this.listaPublicaciones.update(listaActual => [
+          ...listaActual,
+          ...data
+        ]);
+        const transcurrido = Date.now() - start;
+        const restante = 1000 - transcurrido;
+        setTimeout(() => {
+          this.cargando.set(false)}, 
+        restante > 0 ? restante : 0);
+      }
+    },
+    error: () => {
+      this.alert.error("error al cargar")
+    },
+    complete: () => {
+      this.cargando.set(false);
     }
   });
 }

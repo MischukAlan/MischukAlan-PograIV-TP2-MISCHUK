@@ -67,7 +67,7 @@ seleccionarArchivo(event: any) {
 }
 
   cargarUsuarios() {
-    this.http.get<any[]>(`${environment.apiUrl}/usuarios`)
+    this.http.get<any[]>(`${environment.apiUrl}/auth/registrar`)
       .subscribe(data => {
         this.usuarios.set(data);
       });
@@ -104,8 +104,6 @@ async crearUsuario() {
     this.fotoPerfil.set(null);
 
   } catch (err) {
-
-    console.error(err);
 
     alert('Error al crear usuario');
 
