@@ -1,14 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
-
+import {FormBuilder,FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Publicacion } from '../publicacion/publicacion';
 import { environment } from '../../../environments/environment';
 import { AlertService } from '../../service/alert';
@@ -47,7 +42,13 @@ export class Perfil implements OnInit {
     this.perfilForm = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
-      fechaNacimiento: ['', Validators.required],
+      fechaNacimiento: [
+          '',
+          Validators.compose([
+            Validators.required,
+            fechaNacimientoValidator
+          ])
+        ],
       descripcion: ['']
     });
 
@@ -100,6 +101,8 @@ export class Perfil implements OnInit {
 
   }
 
+
+
   cancelarEdicion() {
 
     const usuario = this.usuario();
@@ -137,7 +140,7 @@ export class Perfil implements OnInit {
 
     if (this.perfilForm.invalid) {
 
-      this.alert.error('Completá los campos obligatorios');
+      this.alert.error('Revisa los campos y reeintenta');
 
       return;
 
@@ -205,4 +208,42 @@ export class Perfil implements OnInit {
 
   }
 
+}
+
+export function fechaNacimientoValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+
+  if (!control.value) {
+    return null;
+  }
+
+  const fechaNacimiento = new Date(control.value);
+  const hoy = new Date();
+
+  if (fechaNacimiento > hoy) {
+    return {
+      fechaFutura: true
+    };
+  }
+
+  const fechaMinima = new Date();
+  fechaMinima.setFullYear(fechaMinima.getFullYear() - 10);
+
+  if (fechaNacimiento > fechaMinima) {
+    return {
+      menorDeEdad: true
+    };
+  }
+
+  const fechaMaxima = new Date();
+  fechaMaxima.setFullYear(fechaMaxima.getFullYear() - 100);
+
+  if (fechaNacimiento < fechaMaxima) {
+    return {
+      mayorDeEdad: true
+    };
+  }
+
+  return null;
 }

@@ -16,26 +16,17 @@
             <div class="grid grid-cols-2 gap-1">
                 <div>
                     <label class="block text-xs font-bold text-purple-900 mb-1">Nombre</label>
-                    <input formControlName="nombre" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded" 
-                    [ngClass]="{
-                        'border-red-500': tieneError('nombre'),
-                        'border-purple-300': !tieneError('nombre')} ">
+                    <input formControlName="nombre" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-purple-900 mb-1">Apellido</label>
-                    <input formControlName="apellido" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded"
-                    [ngClass]="{
-                        'border-red-500': tieneError('apellido'),
-                        'border-purple-300': !tieneError('apellido')} ">
+                    <input formControlName="apellido" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
                 </div>
             </div>
 
             <div class="mt-2">
                 <label class="block text-xs font-bold text-purple-900 mb-1">Nombre de usuario</label>
-                <input formControlName="username" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded"
-                [ngClass]="{
-                        'border-red-500': tieneError('username'),
-                        'border-purple-300': !tieneError('username')} ">
+                <input formControlName="username" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
             </div>
 
             <div class="grid grid-cols-2 gap-4">
@@ -55,23 +46,13 @@
 
             <div class="mt-2">
                 <label class="block text-xs font-bold text-purple-900 mb-1">Descripcion</label>
-                <input formControlName="descripcion" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded"
-                [ngClass]="{
-                    'border-red-500': tieneError('descripcion'),
-                    'border-purple-300': !tieneError('descripcion')} ">
-                
+                <input formControlName="descripcion" type="text" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
             </div>
 
             <div class="mt-2">
                 <label class="block text-xs font-bold text-purple-900 mb-1">Email</label>
-                <input formControlName="email" type="email" class="w-full bg-purple-100 border border-purple-300 p-2 rounded"
-                [ngClass]="{
-                    'border-red-500': tieneError('email'),
-                    'border-purple-300': !tieneError('email')} ">
-                
+                <input formControlName="email" type="email" class="w-full bg-purple-100 border border-purple-300 p-2 rounded">
             </div>
-
-
 
             <div class="mt-2">
                 <label class="block text-xs font-bold text-purple-900 mb-1">Contraseña</label>
@@ -88,16 +69,10 @@
                 La contraseña debe tener 8 caracteres, 1 mayúscula y 1 número.
                 </p>
 
-
-            <p *ngIf="registroForm.hasError('noCoincide') && registroForm.touched" class="text-red-500 text-xs mt-2">
+                <p *ngIf="registroForm.hasError('noCoinciden') && registroForm.get('passwordConfirm')?.touched" 
+                class="text-red-500 text-xs">
                 Las contraseñas no coinciden.
-            </p>
-            <p *ngIf="registroForm.get('email')?.hasError('existe')" class="text-red-500 text-xs">
-            Este email ya está registrado
-            </p>
-            <p *ngIf="registroForm.get('user')?.hasError('existe')" class="text-red-500 text-xs">
-            Este username ya está registrado
-            </p>
+                </p>
 
             <button type="submit" class="w-full bg-purple-900 text-white font-bold py-3 rounded uppercase tracking-widest hover:bg-purple-950 transition-colors mt-8">
                 Registrarse

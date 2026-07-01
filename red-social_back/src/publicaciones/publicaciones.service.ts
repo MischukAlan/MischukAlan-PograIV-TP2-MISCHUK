@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
+import { UpdatePublicacionDto } from './dto/update-publicaciones.dto';
 import { Publicaciones } from './entities/publicaciones.entity';
 import { CreatePublicacionesDto } from './dto/create-publicaciones.dto';
 
@@ -89,6 +89,20 @@ async likePublicacion(id: string, usuarioId: string) {
   }
 }
 
+async editarPubli(id: string, dto: any) {
 
+  console.log('DTO:', dto);
 
+  return this.publicacionModel.findByIdAndUpdate(
+    id,
+    {
+      $set: {
+        titulo: dto.titulo,
+        mensaje: dto.mensaje,
+        imagenUrl: dto.imagenUrl
+      }
+    },
+    { new: true }
+  );
+}
 }

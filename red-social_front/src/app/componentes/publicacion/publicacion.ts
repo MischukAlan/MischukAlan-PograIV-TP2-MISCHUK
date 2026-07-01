@@ -1,5 +1,6 @@
 import { Component, Input, EventEmitter, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { environment } from '../../../environments/environment';
@@ -7,7 +8,7 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-publicacion',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './publicacion.html',
   styleUrl: './publicacion.css',
 })
@@ -68,7 +69,46 @@ obtenerPublicacionPorId(id: string) {
       console.error('Error al obtener la publicación:', err);
     }
   });
+}editar() {
+  this.publicacion.editando = true;
+  this.publicacion.tituloEditado = this.publicacion.titulo;
+  this.publicacion.mensajeEditado = this.publicacion.mensaje;
 }
 
+guardar() {
+
+  console.log({
+    titulo: this.publicacion.tituloEditado,
+    mensaje: this.publicacion.mensajeEditado
+  });
+
+  this.http.patch(
+    `${environment.apiUrl}/publicaciones/${this.publicacion._id}`,
+    {
+      titulo: this.publicacion.tituloEditado,
+      mensaje: this.publicacion.mensajeEditado
+    }
+  ).subscribe({
+    next: (res: any) => {
+
+      console.log(res);
+
+      this.publicacion = {
+        ...this.publicacion,
+        ...res,
+        editando: false
+      };
+
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+
+}
+
+cancelar() {
+  this.publicacion.editando = false;
+}
 
 }
