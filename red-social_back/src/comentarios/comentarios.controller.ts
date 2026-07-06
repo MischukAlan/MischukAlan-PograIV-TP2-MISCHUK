@@ -24,8 +24,7 @@ export class ComentariosController {
   editar(
     @Param('id') id: string,
     @Body() dto: UpdateComentarioDto
-  ) {
-    return this.comentariosService.editar(id, dto);
+  ) {return this.comentariosService.editar(id, dto);
   }
 
   @Get(':publicacionId')

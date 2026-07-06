@@ -13,6 +13,17 @@ export class AlertService {
     });
   }
 
+  successTimer(message: string, timer:number ) {
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: message,
+      timer: timer,
+      confirmButtonColor: '#7e22ce',
+      showConfirmButton: false,
+    });
+  }
+
   error(message: string) {
     Swal.fire({
       icon: 'error',

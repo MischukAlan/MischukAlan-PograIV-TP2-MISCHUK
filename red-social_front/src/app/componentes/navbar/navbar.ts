@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink } from "@angular/router";
+import { Component ,inject } from '@angular/core';
+import { Router } from "@angular/router";
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../service/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Navbar {
 
+  private authService = inject(AuthService);
 
   constructor(
     private router: Router,
@@ -18,8 +20,7 @@ export class Navbar {
 
 
   cerrarSesion() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    this.authService.logout()
   }
 
   mostrarBotonSesion(): boolean {

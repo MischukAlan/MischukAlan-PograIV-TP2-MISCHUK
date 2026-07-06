@@ -5,10 +5,17 @@
 
   <div class="flex flex-col items-center">
 
-    <img
-      [src]="editando() ? previewFoto() : usuario().fotoPerfil"
-      class="w-32 h-32 rounded-full object-cover border-4 border-purple-100 shadow-sm"
-    />
+     <img *ngIf="usuario().fotoPerfil"
+        [src]="editando() ? previewFoto() : usuario().fotoPerfil"
+        class="w-32 h-32 rounded-full object-cover border-4 border-purple-100 shadow-sm"
+      />
+
+      <div *ngIf="!usuario().fotoPerfil"
+        class="w-32 h-32 rounded-full bg-purple-400 flex items-center justify-center text-white text-5xl font-bold">
+
+        {{ usuario() | iniciales }}
+
+      </div>
 
     @if(editando()){
       <label
@@ -99,7 +106,8 @@
 
             <input
               formControlName="nombre"
-              class="w-full border rounded-lg p-2">
+              class="w-full border rounded-lg p-2"
+              [ngClass]="{ 'border-red-500': tieneError('nombre') }"/>
 
           </div>
 
@@ -111,8 +119,8 @@
 
             <input
               formControlName="apellido"
-              class="w-full border rounded-lg p-2">
-
+              class="w-full border rounded-lg p-2"
+              [ngClass]="{ 'border-red-500': tieneError('apellido') }"/>
           </div>
 
         </div>
@@ -158,6 +166,14 @@
           </div>
 
           <div>
+          <label class="text-sm font-semibold">Username</label>
+          <input
+              formControlName="username"
+              class="w-full border rounded-lg p-2"
+              [ngClass]="{ 'border-red-500': tieneError('username') }"/>
+          </div>
+
+          <div>
 
             <label class="text-sm font-semibold">
               Descripción
@@ -170,11 +186,24 @@
             </textarea>
 
           </div>
+          
+          <div>
+
+            <label class="text-sm font-semibold">
+              email
+            </label>
+
+            <input
+              type="email"
+              formControlName="email"
+              class="w-full border rounded-lg p-2"
+              [ngClass]="{ 'border-red-500': tieneError('email') }"/>
+            </div>
+          
 
         </div>
 
-        <div class="flex justify-end gap-3 pt-2">
-
+        <div>
           <button
             type="button"
             (click)="cancelarEdicion()"
@@ -216,15 +245,17 @@
   <div class="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
     <div class="flex items-center justify-center border-b text-purple-700 py-4 font-semibold transition-all bg-purple-50">
         Publicaciones
-
     </div>
 
     <div class="p-6">
     
         @for (p of misPublicaciones(); track p._id) {
-          <app-publicacion [publicacion]="p" (eliminada)="cargarPublicaciones(usuario()._id)"></app-publicacion>
+          <app-publicacion [publicacion]="p" 
+          (editada)="procesarEdicion($event)"
+          (eliminada)="cargarPublicaciones(usuario()._id)">
+          </app-publicacion>
         } @empty {
-          <div class="text-center py-12 flex flex-col items-center ">
+          <div class="text-center py-12 flex flex-col items-center object-contain">
             <p class="text-gray-500 text-lg">Aún no has realizado ninguna publicación.</p>
           </div>
         }

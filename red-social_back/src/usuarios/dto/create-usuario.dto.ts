@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength, IsDateString } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsDateString, IsOptional } from 'class-validator';
 
 export class CreateUsuarioDto {
   @IsString()
@@ -17,8 +17,9 @@ export class CreateUsuarioDto {
   @IsEmail()
   email!: string;
   
+  @IsOptional()
   @IsString()
-  fotoPerfil!: string;
+  fotoPerfil?: string;
   
   @IsString()
   @MinLength(8)

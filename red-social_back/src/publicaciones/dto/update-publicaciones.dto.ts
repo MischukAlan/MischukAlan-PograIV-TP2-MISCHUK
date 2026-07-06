@@ -25,8 +25,4 @@ export class UpdatePublicacionDto {
   @IsOptional()
   @IsString()
   fotoAutor?: string;
-
-  @IsOptional()
-  @IsString()
-  fotoAdjunta?: string;
 }

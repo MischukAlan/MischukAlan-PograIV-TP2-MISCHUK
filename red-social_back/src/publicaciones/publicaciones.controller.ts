@@ -10,7 +10,7 @@ export class PublicacionesController {
     private readonly publicacionesService: PublicacionesService
   ) {  }
   
-  @Patch(':id')
+  @Delete(':id')
   async removeLogica(@Param('id') id: string) {
   return await this.publicacionesService.removeLogica(id);
   }
@@ -23,8 +23,7 @@ export class PublicacionesController {
   @Post()
   create(
     @Body() dto: CreatePublicacionesDto)
-    {
-      return this.publicacionesService.create(dto);
+    {return this.publicacionesService.create(dto);
     }
 
   @Get()
@@ -43,11 +42,6 @@ export class PublicacionesController {
   return await this.publicacionesService.findOne(id);
   }
 
-  @Delete('eliminar-todo')
-  removeAll() {
-  return this.publicacionesService.removeAll();
-  }
-  
   @Patch(':id')
     async update(
       @Param('id') id: string, 

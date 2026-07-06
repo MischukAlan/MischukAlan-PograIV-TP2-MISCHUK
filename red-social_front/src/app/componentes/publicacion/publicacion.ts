@@ -1,14 +1,18 @@
 import { Component, Input, EventEmitter, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { supabase } from '../../supabase.client';
 import { FormsModule } from '@angular/forms';
+import { InicialesPipe } from '../../pipes/pipes';
 import { CommonModule } from '@angular/common';
+import { ValidationService } from '../../service/validacion.service';
 import { RouterLink } from '@angular/router';
+import { AlertService } from '../../service/alert';
 import { environment } from '../../../environments/environment';
 
 
 @Component({
   selector: 'app-publicacion',
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, InicialesPipe],
   templateUrl: './publicacion.html',
   styleUrl: './publicacion.css',
 })
@@ -16,12 +20,14 @@ import { environment } from '../../../environments/environment';
 export class Publicacion {
   @Input() publicacion: any;
   @Output() eliminada = new EventEmitter();
-  miUsuarioId = JSON.parse(localStorage.getItem('usuario') || '{}')._id;
+  @Output() editada = new EventEmitter<any>();
+  usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
+  miUsuarioId = this.usuarioLogueado._id;
   publicacionSeleccionada = "null"
   @Output() likeCambiado = new EventEmitter<any>();
   
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private alert: AlertService, private validador: ValidationService) {}
 
   darLike() {
     this.http.patch(`${environment.apiUrl}/publicaciones/${this.publicacion._id}/like`,
@@ -36,79 +42,97 @@ export class Publicacion {
 
     });
   }
+
+  esDuenoOAdmin() {
+    return this.publicacion.usuarioId === this.miUsuarioId ||
+         this.usuarioLogueado.perfil === 'administrador';
+  }
+
   esDueno() {
-    return this.publicacion.usuarioId === this.miUsuarioId;
+    return this.publicacion.usuarioId === this.miUsuarioId ;
   }
 
   eliminar() {
-
-  if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
-    
-    this.http.patch(`${environment.apiUrl}/publicaciones/${this.publicacion._id}`,
-      {}  )
-      .subscribe({
-        next: () => {
-          this.eliminada.emit(); 
-        },
-        error: (err) => {
-          console.error("Error al eliminar:", err);
-          alert("No se pudo eliminar la publicación");
-        }
-      });
+    if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
+      this.http.delete(`${environment.apiUrl}/publicaciones/${this.publicacion._id}`,
+        {}  )
+        .subscribe({
+          next: () => {
+            this.eliminada.emit(); 
+          },
+          error: (err) => {
+            console.error("Error al eliminar:", err);
+            alert("No se pudo eliminar la publicación");
+          }
+        });
+    }
   }
-}
 
-obtenerPublicacionPorId(id: string) {
+  obtenerPublicacionPorId(id: string) {
 
-  const url = `${environment.apiUrl}publicaciones/${id}`;
-  console.log(url  )
+    const url = `${environment.apiUrl}publicaciones/${id}`;
+    
+    this.http.get<any>(url).subscribe({
+      next: (data) => {this.publicacionSeleccionada = data},
+      error: (err) => {console.error('Error al obtener la publicación:', err);
+      }
+    });
+  }
+
+ async subirImagen(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
   
-  this.http.get<any>(url).subscribe({
-    next: (data) => {this.publicacionSeleccionada = data},
-    error: (err) => {
-      console.error('Error al obtener la publicación:', err);
+    try {
+      const fileName = `publicaciones/${Date.now()}_${file.name}`;
+      await supabase.storage.from('imagenes').upload(fileName, file);
+      const { data } = supabase.storage.from('imagenes').getPublicUrl(fileName);
+      this.publicacion.imagenUrl = data.publicUrl;
+
+      if (this.publicacion.editando) {
+        this.publicacion.fotoEditada = data.publicUrl;
+      }
+      
+      this.alert.success('Imagen cargada correctamente');
+    } catch (error) {
+      console.error('Error al subir la imagen:', error);
+      this.alert.error('Error al subir la imagen');
     }
-  });
-}editar() {
-  this.publicacion.editando = true;
-  this.publicacion.tituloEditado = this.publicacion.titulo;
-  this.publicacion.mensajeEditado = this.publicacion.mensaje;
-}
+  }
+  
+  editar() {
+    this.publicacion.editando = true;
+    this.publicacion.tituloEditado = this.publicacion.titulo;
+    this.publicacion.mensajeEditado = this.publicacion.mensaje;
+    this.publicacion.fotoEditada = this.publicacion.imagenUrl;
+  }
 
-guardar() {
+  guardar() {
 
-  console.log({
-    titulo: this.publicacion.tituloEditado,
-    mensaje: this.publicacion.mensajeEditado
-  });
+    const error = this.validador.validarPublicacion(
+      this.publicacion.tituloEditado,
+      this.publicacion.mensajeEditado,
+      this.publicacion.fotoEditada
+    );
 
-  this.http.patch(
-    `${environment.apiUrl}/publicaciones/${this.publicacion._id}`,
-    {
+    if (error) {
+      this.alert.error(error);
+      return;
+    }
+
+
+    this.editada.emit({
+      _id: this.publicacion._id,
       titulo: this.publicacion.tituloEditado,
-      mensaje: this.publicacion.mensajeEditado
-    }
-  ).subscribe({
-    next: (res: any) => {
+      mensaje: this.publicacion.mensajeEditado,
+      imagenUrl: this.publicacion.fotoEditada 
+    });
 
-      console.log(res);
-
-      this.publicacion = {
-        ...this.publicacion,
-        ...res,
-        editando: false
-      };
-
-    },
-    error: (err) => {
-      console.error(err);
-    }
-  });
-
-}
-
-cancelar() {
-  this.publicacion.editando = false;
-}
+    this.alert.successTimer("Modificado con éxito", 1000);
+    this.publicacion.editando = false;
+  }
+  cancelar() {
+    this.publicacion.editando = false;
+  }
 
 }

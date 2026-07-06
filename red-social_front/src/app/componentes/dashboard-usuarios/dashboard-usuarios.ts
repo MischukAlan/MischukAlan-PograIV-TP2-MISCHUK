@@ -2,6 +2,9 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { ValidationService } from '../../service/validacion.service';
+import { AlertService } from '../../service/alert';
+import { InicialesPipe } from '../../pipes/pipes';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { RegistroService } from '../../service/registro.service';
 import { environment } from '../../../environments/environment';
@@ -10,7 +13,7 @@ import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-dashboard-usuarios',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, InicialesPipe],
   templateUrl: './dashboard-usuarios.html',
   styleUrl: './dashboard-usuarios.css',
 })
@@ -26,7 +29,10 @@ export class DashboardUsuarios implements OnInit {
     private router: Router,
     private http: HttpClient,
     private fb: FormBuilder,
-    private registroService: RegistroService
+    private registroService: RegistroService,
+    private validador: ValidationService,
+    private alert: AlertService
+    
   ) {}
 
   ngOnInit() {
@@ -42,22 +48,19 @@ export class DashboardUsuarios implements OnInit {
   }
 
   FormCrear() {
-    this.registroForm = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
-      username: ['', Validators.required],
-      fechaNacimiento: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      this.registroForm = this.fb.group({
+      nombre: ['', [this.validador.nombreValidator()]],
+      apellido: ['', [this.validador.apellidoValidator()]],
+      username: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s0-9]+$/)]],
+      fechaNacimiento: ['', [Validators.required, this.validador.fechaNacimientoValidator]],
+      descripcion: ['', [this.validador.mensajeValidator()]],
       perfil: ['usuario', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      emailConfirm: ['', [Validators.required]],
-      password: ['', Validators.required],
-      passwordConfirm: ['', [Validators.required]]
-
-
-    });
-  }
-
+      email: ['', [this.validador.emailValidator()]],
+      password: ['', [this.validador.passwordValidator()]],
+      passwordConfirm: ['', Validators.required]},
+  {validators: this.validador.verificarCoincidencia()});
+}
+  
 seleccionarArchivo(event: any) {
   const file: File = event.target.files[0];
 
@@ -67,7 +70,7 @@ seleccionarArchivo(event: any) {
 }
 
   cargarUsuarios() {
-    this.http.get<any[]>(`${environment.apiUrl}/auth/registrar`)
+    this.http.get<any[]>(`${environment.apiUrl}/usuarios`)
       .subscribe(data => {
         this.usuarios.set(data);
       });
@@ -111,7 +114,7 @@ async crearUsuario() {
 }
 
 desactivarUsuario(id: string) {
-  this.http.patch(`${environment.apiUrl}/usuarios/${id}/desactivar`, {})
+  this.http.delete(`${environment.apiUrl}/usuarios/${id}/desactivar`, {})
     .subscribe({
       next: () => {
         this.cargarUsuarios();
@@ -131,5 +134,12 @@ activarUsuario(id: string) {
       error: (err) => console.error(err)
     });
 }
+  mensaje(campo: string, nombre: string): string {
+    return this.validador.obtenerMensaje(
+      this.registroForm.get(campo),
+      nombre
+    );
+  }
+
 }
 

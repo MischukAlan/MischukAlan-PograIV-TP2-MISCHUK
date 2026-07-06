@@ -7,10 +7,15 @@
   <div class="col-span-1 border-r border-r-gray-300">
     <div class="group sticky top-1/2 -translate-y-1/2 flex flex-col items-center">
       <a href="/perfil" class="group flex flex-col items-center gap-4">
-        <img
+        <img *ngIf="usuario.foto"
           [src]="usuario.foto"
-          class="w-24 h-24 rounded-full object-cover group-hover:shadow-md "
-        />
+          class="w-24 h-24 rounded-full object-cover group-hover:shadow-md "/>
+          
+        <div *ngIf="!usuario.foto" 
+          class="w-24 h-24 rounded-full bg-purple-400 flex items-center justify-center text-white text-3xl font-bold">
+          {{ usuario | iniciales }}
+        </div>
+
         <h1 class="text-2xl font-bold text-gray-800 leading-5 uppercase ">
           {{ usuario.nombre }}
         </h1>
@@ -30,10 +35,15 @@
 
     <div class="flex gap-4">
 
-      <img
+      <img *ngIf="usuario.foto"
         [src]="usuario.foto"
-        class="w-14 h-14 rounded-full object-cover border-2 border-purple-100 shadow-sm"
-      />
+        class="w-14 h-14 rounded-full object-cover border-2 border-purple-100 shadow-sm"/>
+        
+      <div *ngIf="!usuario.foto" 
+          class="w-14 h-14 rounded-full bg-purple-400 flex items-center justify-center text-white text-xl font-bold">
+        {{ usuario  | iniciales }}
+      </div>
+
 
       <div class="flex-1">
 
@@ -65,10 +75,6 @@
           <span *ngIf="cargada()" class="flex items-center gap-1 font-medium">
             ✓ Imagen cargada
           </span>
-
-
-
-
         </label>
 
           <button
@@ -99,7 +105,9 @@
         *ngFor="let p of listaPublicaciones()"
         [publicacion]="p"
         (eliminada)="obtenerPublicaciones()"
-        (likeCambiado)="actualizarPublicacion($event)">
+        (likeCambiado)="actualizarPublicacion($event)"
+        (editada)="procesarEdicion($event)">
+        
       </app-publicacion>
 
     </div>

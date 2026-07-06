@@ -13,8 +13,13 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async login(email: string, password: string) {
-    const usuario = await this.usuarioModel.findOne({ email }).exec();
+  async login(credenciales: string, password: string) {
+
+        const usuario = await this.usuarioModel.findOne({
+        $or: [{ email: credenciales },{ username: credenciales}]
+      });
+
+      console.log(usuario)
     if (!usuario) {
       return { ok: false, message: 'Credenciales inválidas' };
     }
@@ -92,4 +97,34 @@ export class AuthService {
       throw new UnauthorizedException('Token invalido o vencido');
     }
   }
+
+  async refrescar(token: string) {
+  try {
+    const payload = this.jwtService.verify(token);
+
+    const usuario = await this.usuarioModel.findById(payload.sub);
+
+    if (!usuario) {
+      throw new UnauthorizedException();
+    }
+
+    const nuevoPayload = {
+      sub: usuario._id,
+      email: usuario.email,
+      perfil: usuario.perfil,
+    };
+
+    return {
+      access_token: this.jwtService.sign(
+        nuevoPayload,
+        {
+          expiresIn: '60s'
+        }
+      ),
+    };
+
+  } catch {
+    throw new UnauthorizedException('Token inválido');
+  }
+}
 }

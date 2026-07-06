@@ -11,7 +11,11 @@ export class RegistroService {
 
   constructor(private http: HttpClient) {}
 
-  async registrarUsuario(formValue: any, fotoPerfil: File) {
+async registrarUsuario(formValue: any, fotoPerfil?: File) {
+
+  let fotoUrl = '';
+
+  if (fotoPerfil) {
 
     const fileName = `fotoPerfil/${Date.now()}_${fotoPerfil.name}`;
 
@@ -23,20 +27,22 @@ export class RegistroService {
       .from('imagenes')
       .getPublicUrl(fileName);
 
-    const {
-      emailConfirm,
-      passwordConfirm,
-      ...datos
-    } = formValue;
-
-    const usuarioFinal = {
-      ...datos,
-      fotoPerfil: data.publicUrl
-    };
-
-    return await firstValueFrom(
-      this.http.post(`${environment.apiUrl}/auth/registrar`, usuarioFinal)
-    );
+    fotoUrl = data.publicUrl;
   }
 
+  const {
+    emailConfirm,
+    passwordConfirm,
+    ...datos
+  } = formValue;
+
+  const usuarioFinal = {
+    ...datos,
+    fotoPerfil: fotoUrl
+  };
+
+  return await firstValueFrom(
+    this.http.post(`${environment.apiUrl}/auth/registrar`, usuarioFinal)
+  );
+}
 }

@@ -17,7 +17,7 @@ import { AlertService } from '../../service/alert';
 
 
 export class Login {
-  correoElectronico: string = '';
+  identificador: string = '';
   clave: string = '';
   private apiUrl = environment.apiUrl;
 
@@ -25,52 +25,27 @@ export class Login {
     private router: Router,
     private http: HttpClient,
     private alert: AlertService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {}
 
-  private configurarAvisoSesion() {
-    this.tokenService.iniciarTemporizador(async () => {
-      const extender = await this.alert.confirmSessionExtension();
-      if (extender) {
-        this.renovarSesion();
-      } else {
-        localStorage.clear();
-        this.router.navigate(['/login']);
-      }
-    });
-  }
 
   async iniciarSesion() {
-    const credenciales = { email: this.correoElectronico, password: this.clave };
+    const credenciales = { credenciales: this.identificador, password: this.clave };
+    console.log(credenciales)
     
     this.http.post(`${this.apiUrl}/auth/login`, credenciales).subscribe({
       next: (res: any) => {
         if (!res.ok) {
-          this.alert.error('Credenciales inválidas.');
+          this.alert.error(res.message);
           return;
         }
         localStorage.setItem('token', res.access_token);
         localStorage.setItem('usuario', JSON.stringify(res.usuario));
 
-        this.configurarAvisoSesion();
+        this.tokenService.configurarAvisoSesion();
         this.router.navigate(['/muro']);
       },
       error: () => this.alert.error('Credenciales inválidas.')
-    });
-  }
-
-  renovarSesion() {
-    this.http.post(`${environment.apiUrl}/auth/refresh`, {}).subscribe({
-      next: (res: any) => {
-        localStorage.setItem('token', res.access_token);
-        this.alert.success('Sesión extendida con éxito');
-        this.configurarAvisoSesion();
-      },
-      error: () => {
-        this.alert.error('Tu sesión ha finalizado');
-        localStorage.clear();
-        this.router.navigate(['/login']);
-      }
     });
   }
 }

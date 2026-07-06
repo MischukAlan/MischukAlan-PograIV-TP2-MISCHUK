@@ -1,5 +1,8 @@
 import { Injectable ,NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Publicaciones } from '../publicaciones/entities/publicaciones.entity';
+import { BadRequestException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { Usuario } from './entities/usuario.entity';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -9,8 +12,13 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 @Injectable()
 export class UsuariosService {
 
-  constructor(@InjectModel(Usuario.name) private usuarioModel: Model<Usuario>) {}
-  
+constructor(
+  @InjectModel(Usuario.name)
+  private usuarioModel: Model<Usuario>,
+
+  @InjectModel(Publicaciones.name)
+  private publicacionesModel: Model<Publicaciones>,
+) {}
 
   async removeLogica(id: string) {
     return this.usuarioModel.findByIdAndUpdate(
@@ -50,22 +58,48 @@ export class UsuariosService {
   }
 
  
- async editar(id: string, updateUsuarioDto: UpdateUsuarioDto) {
+async editar(id: string, updateUsuarioDto: UpdateUsuarioDto) {
+  const usuario = await this.usuarioModel.findByIdAndUpdate(
+    id,
+    updateUsuarioDto,
+    { new: true }
+  );
 
-    const usuario = await this.usuarioModel.findByIdAndUpdate(
-      id,
-      updateUsuarioDto,
-      { new: true }
-    ).exec();
+  if (!usuario) {
+    throw new NotFoundException('Usuario no encontrado');
+  }
+  const existeUsername = await this.usuarioModel.findOne({
+        username: usuario.username,
+        _id: { $ne: id }
+    });
 
-    if (!usuario) {
-      throw new NotFoundException('Usuario no encontrado');
+    if (existeUsername) {
+        throw new BadRequestException('El nombre de usuario ya está en uso.');
+    }
+    const existeEmail = await this.usuarioModel.findOne({
+        email: usuario.email,
+        _id: { $ne: id }
+    });
+
+    if (existeEmail) {
+        throw new BadRequestException('El correo ya está registrado.');
+    }
+    if (usuario.password) {
+        usuario.password = await bcrypt.hash(usuario.password,10);
     }
 
-    return usuario;
-  }
 
+  await this.publicacionesModel.updateMany(
+    { usuarioId: id },
+    {$set: {
+        autor: `${usuario.nombre} ${usuario.apellido}`,
+        fotoAutor: usuario.fotoPerfil,
+      },
+    }
+  );
 
+  return usuario;
+}
 
   async remove(id: string) {
     return await this.usuarioModel.findByIdAndDelete(id).exec();

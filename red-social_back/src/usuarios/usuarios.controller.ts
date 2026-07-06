@@ -8,10 +8,11 @@ export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
 
-  @Patch(':id/desactivar')
+  @Delete(':id/desactivar')
   removeLogica(@Param('id') id: string) {
     return this.usuariosService.removeLogica(id);
   }
+  
 
   @Get('userDesactivados')
     async obtenerUusariosDesactivados() {

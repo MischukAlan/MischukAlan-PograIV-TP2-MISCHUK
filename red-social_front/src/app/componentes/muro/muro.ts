@@ -1,6 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ValidationService } from '../../service/validacion.service';
+import { InicialesPipe } from '../../pipes/pipes';
 import { HttpClient } from '@angular/common/http';
 import { supabase } from '../../supabase.client';
 import { Publicacion } from '../publicacion/publicacion';
@@ -9,7 +11,7 @@ import { AlertService } from '../../service/alert';
 
 @Component({
   selector: 'app-muro',
-  imports: [FormsModule, CommonModule, Publicacion],
+  imports: [FormsModule, CommonModule, Publicacion, InicialesPipe],
   templateUrl: './muro.html',
   styleUrl: './muro.css',
 })
@@ -21,6 +23,7 @@ export class Muro {
   cargada = signal<boolean>(false);
   usuario = {
     nombre: '',
+    apellido: '', 
     fotoPublicacion: '',
     foto: ''
   };
@@ -33,6 +36,7 @@ export class Muro {
   constructor(
     private http: HttpClient,
     private alert:AlertService,
+    private validador: ValidationService
   ) {}
 
 ngOnInit() {
@@ -44,6 +48,7 @@ ngOnInit() {
     this.nuevaPublicacion.usuarioId = user._id;}
   if (user && user.nombre) {
     this.usuario.nombre = user.nombre;
+    this.usuario.apellido = user.apellido;
     this.usuario.fotoPublicacion = user.imagenUrl;
   }
 }
@@ -66,20 +71,16 @@ actualizarPublicacion(res: any) {
     fotoAutor: user.fotoPerfil
 
   };
-  const titulo = this.nuevaPublicacion.titulo?.trim();
-  const mensaje = this.nuevaPublicacion.mensaje?.trim();
-  const imagen = this.nuevaPublicacion.imagenUrl?.trim();
+  const error = this.validador.validarPublicacion(
+    this.nuevaPublicacion.titulo,
+    this.nuevaPublicacion.mensaje,
+    this.nuevaPublicacion.imagenUrl
+  );
 
-  if (!titulo && !mensaje && !imagen) {
-    this.alert.error('No podés publicar algo vacío.');
+  if (error) {
+    this.alert.error(error);
     return;
   }
-
-  if ((titulo && titulo.length === 0) || (mensaje && mensaje.length === 0)) {
-    this.alert.error('No se permiten espacios vacíos.');
-    return;
-  }
-
   
   this.http.post(`${environment.apiUrl}/publicaciones`, data)
     .subscribe({
@@ -172,5 +173,19 @@ cambiarOrden(event: any) {
     }
     return copia;
   });
+}
+
+async procesarEdicion(datos: any) {
+  try {
+    await this.http.patch(`${this.apiUrl}/publicaciones/${datos._id}`, {
+      titulo: datos.titulo,
+      mensaje: datos.mensaje,
+      imagenUrl: datos.imagenUrl
+    }).toPromise();
+    await this.obtenerPublicaciones();
+  } 
+  catch (err) {
+    alert("Error al guardar cambios");
+  }
 }
 }

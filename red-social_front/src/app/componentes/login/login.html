@@ -13,13 +13,13 @@
         <p class="text-9xl text-purple-600 -mt-3"style="font-family: 'Black Ops One';">IN</p>
     </div>
 
-    <input type="email" placeholder="Email" name="email"
-      [(ngModel)]="correoElectronico"  class="bg-purple-200 border border-purple-500 p-3 rounded text-black focus:outline-none focus:border-purple-900">
+    <input type="email" placeholder="Email - Nombre de Usuario" name="email"
+      [(ngModel)]="identificador"  class="bg-purple-200 border border-purple-500 p-3 rounded text-black focus:outline-none focus:border-purple-900">
 
     <input type="password" placeholder="Contraseña" name="password"
       [(ngModel)]="clave"  class="bg-purple-200 border border-purple-500 p-3 rounded text-black focus:outline-none focus:border-purple-900">
 
-    <button type="button" (click)="iniciarSesion()" 
+    <button type="submit" (click)="iniciarSesion()" 
         class="bg-purple-900 text-white font-bold py-3 rounded uppercase tracking-widest hover:bg-purple-950 transition-colors mt-2">
         Entrar
     </button>

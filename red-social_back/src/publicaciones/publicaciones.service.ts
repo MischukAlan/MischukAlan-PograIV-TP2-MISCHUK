@@ -89,20 +89,16 @@ async likePublicacion(id: string, usuarioId: string) {
   }
 }
 
-async editarPubli(id: string, dto: any) {
+async editarPubli(id: string, dto: UpdatePublicacionDto) {
+  const updateData: any = {};
+  if (dto.titulo) updateData.titulo = dto.titulo;
+  if (dto.mensaje) updateData.mensaje = dto.mensaje;
+  if (dto.imagenUrl) updateData.imagenUrl = dto.imagenUrl; 
 
-  console.log('DTO:', dto);
-
-  return this.publicacionModel.findByIdAndUpdate(
+  return await this.publicacionModel.findByIdAndUpdate(
     id,
-    {
-      $set: {
-        titulo: dto.titulo,
-        mensaje: dto.mensaje,
-        imagenUrl: dto.imagenUrl
-      }
-    },
+    { $set: updateData },
     { new: true }
-  );
+  ).exec();
 }
 }
