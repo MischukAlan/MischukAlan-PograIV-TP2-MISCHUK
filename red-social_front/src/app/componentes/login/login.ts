@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { TokenService } from '../../service/token.service';
+import { AutoFocusDirective } from '../../directivas/directivas';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AlertService } from '../../service/alert';
@@ -10,7 +11,7 @@ import { AlertService } from '../../service/alert';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule, AutoFocusDirective],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })

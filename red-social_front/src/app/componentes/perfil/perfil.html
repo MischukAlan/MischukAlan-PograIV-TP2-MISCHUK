@@ -12,9 +12,7 @@
 
       <div *ngIf="!usuario().fotoPerfil"
         class="w-32 h-32 rounded-full bg-purple-400 flex items-center justify-center text-white text-5xl font-bold">
-
         {{ usuario() | iniciales }}
-
       </div>
 
     @if(editando()){
@@ -105,6 +103,7 @@
             </label>
 
             <input
+              appAutoFocus
               formControlName="nombre"
               class="w-full border rounded-lg p-2"
               [ngClass]="{ 'border-red-500': tieneError('nombre') }"/>

@@ -25,7 +25,8 @@
         </div>
 
         <span class="text-sm text-gray-400">
-          {{ p.fechaCreado | date:'dd/MM/yyyy HH:mm' }}
+  
+          {{ p.fechaCreado | tiempoTranscurrido}}
         </span>
       </div>
 
@@ -52,7 +53,7 @@
           <button
             (click)="enviarComentario()"
             [disabled]="enviandoComentario()"
-            class="bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold hover:bg-purple-800 disabled:opacity-70 flex items-center justify-center min-w-[110px]">
+            class="bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold hover:bg-purple-800 disabled:opacity-70 flex items-center justify-center min-w-27.5">
 
             <ng-container *ngIf="!enviandoComentario(); else spinner">
               Enviar
@@ -75,7 +76,7 @@
     <div class="space-y-4">
 
       <h3 class="font-bold text-gray-800 text-lg">
-        Comentarios ({{ comentarios().length }})
+        {{ comentarios().length | comentarios}}
       </h3>
 
       <div *ngFor="let c of comentarios()"
@@ -108,7 +109,7 @@
               </h4>
 
               <span class="text-xs text-gray-400">
-                {{ c.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                {{ c.createdAt | tiempoTranscurrido}}
               </span>
             </div>
 

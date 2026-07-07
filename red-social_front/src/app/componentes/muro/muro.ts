@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ValidationService } from '../../service/validacion.service';
+import { ScrollInfinitoDirective } from '../../directivas/directivas';
 import { InicialesPipe } from '../../pipes/pipes';
 import { HttpClient } from '@angular/common/http';
 import { supabase } from '../../supabase.client';
@@ -11,7 +12,7 @@ import { AlertService } from '../../service/alert';
 
 @Component({
   selector: 'app-muro',
-  imports: [FormsModule, CommonModule, Publicacion, InicialesPipe],
+  imports: [FormsModule, CommonModule, Publicacion, InicialesPipe, ScrollInfinitoDirective],
   templateUrl: './muro.html',
   styleUrl: './muro.css',
 })
@@ -31,6 +32,8 @@ export class Muro {
   nuevaPublicacion = { titulo: '', mensaje: '', imagenUrl: '', usuarioId:"" };
   listaPublicaciones = signal<any[]>([]);
   cargando = signal(true);
+  noHayMas = signal<boolean>(false);
+  cargandoPaginado = false;
   private apiUrl = environment.apiUrl;
   
   constructor(
@@ -118,9 +121,16 @@ async subirImagen(event: any) {
   }
 }
 
+
 cargarMas() {
-  this.paginaActual++; 
+
+  if (this.cargandoPaginado || this.noHayMas()) {
+    return;
+  }
+
+  this.paginaActual++;
   this.obtenerPublicaciones();
+
 }
 
 obtenerPublicaciones() {
@@ -134,9 +144,16 @@ obtenerPublicaciones() {
   
   this.http.get<any[]>(url).subscribe({
     next: (data) => {
+
+      if (data.length === 0) {
+        this.noHayMas.set(true);
+        return;
+      }
+
       if (this.paginaActual === 1) {
         this.listaPublicaciones.set(data);
-      } else {
+      }
+       else {
         this.listaPublicaciones.update(listaActual => [
           ...listaActual,
           ...data

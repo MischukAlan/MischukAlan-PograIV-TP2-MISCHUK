@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { AutoFocusDirective } from '../../directivas/directivas';
 import { Router } from '@angular/router';
 import { RegistroService } from '../../service/registro.service';
 import { RouterLink } from '@angular/router';
@@ -12,7 +12,7 @@ import { TokenService } from '../../service/token.service';
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink, AutoFocusDirective],
   templateUrl: './registro.html',
   styleUrl: './registro.css',
 })

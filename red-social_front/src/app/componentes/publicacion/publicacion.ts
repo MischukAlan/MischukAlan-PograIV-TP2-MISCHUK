@@ -2,7 +2,8 @@ import { Component, Input, EventEmitter, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { supabase } from '../../supabase.client';
 import { FormsModule } from '@angular/forms';
-import { InicialesPipe } from '../../pipes/pipes';
+import { InicialesPipe, TiempoTranscurridoPipe } from '../../pipes/pipes';
+import { TooltipDirective } from '../../directivas/directivas';
 import { CommonModule } from '@angular/common';
 import { ValidationService } from '../../service/validacion.service';
 import { RouterLink } from '@angular/router';
@@ -12,7 +13,7 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-publicacion',
-  imports: [CommonModule, RouterLink, FormsModule, InicialesPipe],
+  imports: [CommonModule, RouterLink, FormsModule, InicialesPipe, TiempoTranscurridoPipe, TooltipDirective],
   templateUrl: './publicacion.html',
   styleUrl: './publicacion.css',
 })

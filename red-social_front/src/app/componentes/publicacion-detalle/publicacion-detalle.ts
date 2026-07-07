@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { InicialesPipe } from '../../pipes/pipes';
+import { InicialesPipe, ComentariosPipe, TiempoTranscurridoPipe} from '../../pipes/pipes';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
@@ -9,13 +9,14 @@ import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-publicacion-detalle',
   standalone: true,
-  imports: [FormsModule, CommonModule, InicialesPipe],
+  imports: [FormsModule, CommonModule, InicialesPipe, ComentariosPipe, TiempoTranscurridoPipe],
   templateUrl: './publicacion-detalle.html',
 })
 export class PublicacionDetalle implements OnInit {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
 
+  miUsuario = JSON.parse(localStorage.getItem('usuario') || '{}');
   miUsuarioId = JSON.parse(localStorage.getItem('usuario') || '{}')._id;
   publicacionId = this.route.snapshot.params['id'];
 

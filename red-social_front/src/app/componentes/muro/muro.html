@@ -110,16 +110,20 @@
         
       </app-publicacion>
 
-    </div>
-    <div class="flex justify-center  mb-4">
-        <button 
-          (click)="cargarMas()" 
-          class="px-5 py-2 bg-white border border-purple-200 text-purple-700 rounded-full font-medium hover:bg-purple-50 transition-all shadow-sm flex items-center gap-2">
-          <span>Cargar más publicaciones</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-          </svg>
-        </button>
-      </div>
-  </div>
+      <div 
+        scrollInfinito 
+        (cargarMas)="cargarMas()"
+        class="flex justify-center mb-8 mt-10">
+
+        @if(noHayMas()) {
+          <div class="flex items-center gap-3 text-gray-400 text-sm">
+            <span class="h-px w-16 bg-gray-300"></span>
+
+            <span>
+              No hay más publicaciones
+            </span>
+
+            <span class="h-px w-16 bg-gray-300"></span>
+          </div>
+        }
 </div>
