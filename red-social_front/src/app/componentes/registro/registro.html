@@ -1,29 +1,31 @@
-<div class="grid grid-cols-2 min-h-screen">
+<div class="grid grid-cols-2 min-h-screen bg-gradient-to-br from-[#540863] via-[#92487A] to-[#E49BA6]">
     <div class="col-span-1 pr-20 flex flex-col justify-center items-end">
-        <h1 class="text-9xl text-purple-600 leading-[0.5]" style="font-family: 'Black Ops One'">CREA</h1>
+        <h1 class="text-9xl text-[#540863] leading-[0.5]" style="font-family: 'Black Ops One'">CREA</h1>
         <h2 class="text-4xl mr-2 font-bold text-black leading-none mt-2">UNA</h2>
         <h3 class="text-4xl font-bold text-black leading-none">CUENTA</h3>
-        <h1 class="text-9xl text-purple-600 leading-none -mt-3" style="font-family: 'Black Ops One'">NUEVA</h1>
+        <h1 class="text-9xl text-[#540863] leading-none -mt-3" style="font-family: 'Black Ops One'">NUEVA</h1>
     </div>
 
     <div class="col-span-1 flex items-center h-screen">
-        <form [formGroup]="registroForm" (ngSubmit)="registrar()" class="bg-white p-4 w-full max-w-xl h-[90vh] overflow-y-auto pr-6">
+        <form [formGroup]="registroForm" (ngSubmit)="registrar()" class="p-4 w-full max-w-xl h-[90vh] overflow-y-auto pr-6  bg-white/10 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl
+          ">
+
             <div class="text-left mb-4">
                 <h2 class="text-2xl font-bold text-black ml-1 leading-none  uppercase">sign</h2>
-                <p class="text-8xl text-purple-600 -mt-2" style="font-family: 'Black Ops One';">UP</p>
+                <p class="text-8xl text-[#540863] -mt-2" style="font-family: 'Black Ops One';">UP</p>
             </div>
 
             <div>
             <div class="flex justify-between items-center mb-1">
 
                 <label 
-                class="text-xs font-bold text-purple-900">
+                class="text-xs font-bold text-[#540863]">
                 Nombre
                 </label>
 
                 <span
                 *ngIf="mensaje('nombre','El nombre')"
-                class="text-xs text-red-500 font-medium">
+                class="text-xs text-red-700 font-medium">
 
                 {{ mensaje('nombre','El nombre') }}
 
@@ -52,7 +54,7 @@
 
                         <span
                         *ngIf="mensaje('apellido','El apellido')"
-                        class="text-xs text-red-500 font-medium">
+                        class="text-xs text-red-700 font-medium">
                         {{ mensaje('apellido','El apellido') }}
                         </span>
 
@@ -80,7 +82,7 @@
 
                         <span
                         *ngIf="mensaje('username','El usuario')"
-                        class="text-xs text-red-500 font-medium">
+                        class="text-xs text-red-700 font-medium">
 
                         {{ mensaje('username','El usuario') }}
 
@@ -108,7 +110,7 @@
 
                 <span
                 *ngIf="mensaje('fechaNacimiento','La fecha')"
-                class="text-xs text-red-500 font-medium">
+                class="text-xs text-red-700 font-medium">
 
                 {{ mensaje('fechaNacimiento','La fecha') }}
 
@@ -144,7 +146,7 @@
 
                     <span
                     *ngIf="mensaje('descripcion','La descripción')"
-                    class="text-xs text-red-500 font-medium">
+                    class="text-xs text-red-700 font-medium">
 
                     {{ mensaje('descripcion','La descripción') }}
 
@@ -171,7 +173,7 @@
 
                     <span
                     *ngIf="mensaje('email','El email')"
-                    class="text-xs text-red-500 font-medium">
+                    class="text-xs text-red-700 font-medium">
 
                     {{ mensaje('email','El email') }}
 
@@ -221,7 +223,7 @@
             </div>
             <span
                 *ngIf="mensaje('password','La contraseña')"
-                class="text-xs text-red-500 font-medium">
+                class="text-xs text-red-700 font-medium">
                 {{ mensaje('password','La contraseña') }}
             </span>
 
@@ -229,7 +231,7 @@
                 *ngIf="registroForm.get('passwordConfirm')?.touched &&
                         registroForm.get('passwordConfirm')?.value &&
                         registroForm.hasError('noCoincide')"
-                class="text-xs text-red-500 font-medium">
+                class="text-xs text-red-700 font-medium">
                 Las contraseñas no coinciden.
                 </span>
 
@@ -241,7 +243,7 @@
               <div class="w-full max-w-3xl flex justify-center mb-3">
                   <div class="text-center pt-2">
                         <a routerLink="/login" class="text-slate-600 text-sm font-medium cursor-default">
-                            ¿Ya tenés cuenta? <span class="text-sky-500 cursor-pointer font-bold tracking-wider hover:underline">Logeate</span>
+                            ¿Ya tenés cuenta? <span class="text-sky-600 cursor-pointer font-bold tracking-wider hover:underline">Logeate</span>
                         </a>
                 </div>
             </div>

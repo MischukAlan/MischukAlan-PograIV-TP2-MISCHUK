@@ -31,7 +31,7 @@ export class Muro {
   
   nuevaPublicacion = { titulo: '', mensaje: '', imagenUrl: '', usuarioId:"" };
   listaPublicaciones = signal<any[]>([]);
-  cargando = signal(true);
+  cargando = signal(false);
   noHayMas = signal<boolean>(false);
   cargandoPaginado = false;
   private apiUrl = environment.apiUrl;
@@ -43,7 +43,7 @@ export class Muro {
   ) {}
 
 ngOnInit() {
-  this.cargando.set(true)
+  this.cargando.set(false)
   this.obtenerPublicaciones();
   const user = JSON.parse(localStorage.getItem('usuario') || '{}'  );
   this.usuario.foto = user.fotoPerfil;
@@ -138,7 +138,7 @@ obtenerPublicaciones() {
   const url = `${this.apiUrl}/publicaciones?page=${this.paginaActual}&limit=5`;
 
   if (this.paginaActual === 1) {
-    this.cargando.set(true);
+    this.cargando.set(false);
   } 
 
   

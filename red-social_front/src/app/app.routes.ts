@@ -20,24 +20,24 @@ export const routes: Routes = [
     
     {path: 'perfil', 
         component: Perfil,
-        canActivate: [authGuard]        
+        // canActivate: [authGuard]        
     },
 
     {path: 'dashboard-usuarios', 
         component: DashboardUsuarios,
         canActivate: [rolGuard],
-        data: { expectedRole: 'administrador' }         
+        // data: { expectedRole: 'administrador' }         
     },
 
     {path: 'dashboard-estadisticas', 
         component: DashboardEstadisticas,
         canActivate: [rolGuard],
-        data: { expectedRole: 'administrador' }      
+        // data: { expectedRole: 'administrador' }      
     },
     
     {path: 'muro',
         component: Muro,
-        canActivate: [authGuard]
+        // canActivate: [authGuard]
     },
     
     {path: 'publicacion-detalle/:id', component: PublicacionDetalle, canActivate: [authGuard]},   
