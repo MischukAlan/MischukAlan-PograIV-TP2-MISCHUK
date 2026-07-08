@@ -23,7 +23,7 @@ import { IngresosModule } from '../ingresos/ingresos.module';
     JwtModule.register({
       global: true,
       secret: 'MiClaveSecreta',
-      signOptions: { expiresIn: '2h' },
+      signOptions: { expiresIn: '60s' },
     }),
   ],
 
