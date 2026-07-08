@@ -5,21 +5,20 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { Usuario } from '../usuarios/entities/usuario.entity';
 import { CreateUsuarioDto } from 'src/usuarios/dto/create-usuario.dto';
+import { IngresosService } from 'src/ingresos/ingresos.service';
+
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(Usuario.name) private usuarioModel: Model<Usuario>, 
-    private jwtService: JwtService
-  ) {}
+    @InjectModel(Usuario.name) private usuarioModel: Model<Usuario>, private jwtService: JwtService, private ingresosService: IngresosService) {}
 
   async login(credenciales: string, password: string) {
 
-        const usuario = await this.usuarioModel.findOne({
-        $or: [{ email: credenciales },{ username: credenciales}]
-      });
+    const usuario = await this.usuarioModel.findOne({
+    $or: [{ email: credenciales },{ username: credenciales}]});
 
-      console.log(usuario)
+
     if (!usuario) {
       return { ok: false, message: 'Credenciales inválidas' };
     }
@@ -32,6 +31,8 @@ export class AuthService {
     }
 
     const resultadoToken = this.generarToken(usuario);
+    await this.ingresosService.registrar(usuario._id);
+
     return {
       ok: true,
       access_token: resultadoToken.access_token,
@@ -54,6 +55,7 @@ export class AuthService {
         message: 'El email ya está registrado',
       });
     }
+
     const usernameExiste = await this.usuarioModel.findOne({ username: nuevoUsuario.username });
     if (usernameExiste) {
       throw new BadRequestException({
@@ -64,6 +66,8 @@ export class AuthService {
     const usuario = await nuevoUsuario.save();
 
     const resultadoToken = this.generarToken(usuario);
+
+    await this.ingresosService.registrar(usuario._id);
 
     return {
       ok: true,

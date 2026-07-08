@@ -9,6 +9,7 @@ import { Publicacion } from '../publicacion/publicacion';
 import { environment } from '../../../environments/environment';
 import { AlertService } from '../../service/alert';
 import { supabase } from '../../supabase.client';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
@@ -30,43 +31,64 @@ export class Perfil implements OnInit {
 
   fotoNueva!: File;
   previewFoto = signal('');
-
   perfilForm: FormGroup;
 
-  constructor(private http: HttpClient, private fb: FormBuilder,  private alert: AlertService, private validaciones : ValidationService ) {
+  esPerfilPropio = signal(true);
+
+  constructor(private http: HttpClient, private fb: FormBuilder,  private alert: AlertService, private validaciones : ValidationService,  private route: ActivatedRoute ) {
 
     this.perfilForm = this.fb.group({
       nombre: ['', [this.validaciones.nombreValidator()]],
       apellido: ['', [this.validaciones.apellidoValidator()]],
+      perfil: ['', Validators.required],
       fechaNacimiento: ['', Validators.compose([ Validators.required, validaciones.fechaNacimientoValidator ])],
       descripcion: ['', [this.validaciones.mensajeValidator()]],
-      username: ['', [this.validaciones.nombreValidator()]],
+      username: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s0-9]+$/)]],
       email: ['', [this.validaciones.emailValidator()]],
     });
 
   }
 
-  ngOnInit() {
+ngOnInit() {
 
-    const userStorage = JSON.parse(localStorage.getItem('usuario') || '{}');
+  const usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
 
-    if (userStorage._id) {
+  this.route.paramMap.subscribe(params => {
 
-      this.usuario.set(userStorage);
+    const id = params.get('id');
 
-      this.previewFoto.set(userStorage.fotoPerfil);
+    if (!id) {
 
-      this.perfilForm.patchValue({
-        nombre: userStorage.nombre,
-        apellido: userStorage.apellido,
-        fechaNacimiento: userStorage.fechaNacimiento?.substring(0,10),
-        descripcion: userStorage.descripcion,
-        email: userStorage.email,
-        username: userStorage.username,
-      });
+      this.esPerfilPropio.set(true);
 
-      this.cargarPublicaciones(userStorage._id);
+      this.cargarPerfil(usuarioLogueado);
+
+      return;
     }
+
+    this.esPerfilPropio.set(id === usuarioLogueado._id);
+
+    if (id === usuarioLogueado._id) {
+
+      this.cargarPerfil(usuarioLogueado);
+
+    } else {
+
+      this.obtenerPerfil(id);
+
+    }
+
+  });
+
+}
+
+  actualizarPublicacion(res: any) {
+
+    this.misPublicaciones.update(lista =>
+      lista.map(p =>
+        p._id === res._id ? res : p
+      )
+    );
 
   }
 
@@ -90,10 +112,12 @@ export class Perfil implements OnInit {
   }
 
   editarPerfil() {
+    if (!this.esPerfilPropio()) {
+      return;
+    }
     this.editando.set(true);
+
   }
-
-
 
   cancelarEdicion() {
 
@@ -104,6 +128,7 @@ export class Perfil implements OnInit {
       nombre: usuario.nombre,
       apellido: usuario.apellido,
       fechaNacimiento: usuario.fechaNacimiento?.substring(0,10),
+      perfil: usuario.perfil,
       descripcion: usuario.descripcion,
       username: usuario.username,
       email: usuario.email,
@@ -121,6 +146,7 @@ export class Perfil implements OnInit {
     const control = this.perfilForm.get(campo);
     return !!(control && control.invalid && control.touched);
   }
+
   seleccionarFoto(event: any) {
 
     const file = event.target.files[0];
@@ -139,8 +165,8 @@ export class Perfil implements OnInit {
     if (this.perfilForm.invalid) {
       this.alert.error('Revisa los campos y reeintenta');
       return;
-
     }
+
     let fotoPerfil = this.usuario().fotoPerfil;
     try {
       if (this.fotoNueva) {const nombreArchivo = `fotoPerfil/${Date.now()}_${this.fotoNueva.name}`;
@@ -156,25 +182,46 @@ export class Perfil implements OnInit {
           nombre: formValue.nombre,
           apellido: formValue.apellido,
           fechaNacimiento: formValue.fechaNacimiento,
+          perfil: formValue.perfil,
           descripcion: formValue.descripcion,
           email: formValue.email,
           username: formValue.username,
           fotoPerfil
         };
-      const usuarioActualizado: any = await this.http.patch(`${environment.apiUrl}/usuarios/${this.usuario()._id}`, body
-      ).toPromise();
-      localStorage.setItem(
-        'usuario',
-        JSON.stringify(usuarioActualizado)
-      );
+
+      const usuarioActualizado: any = await this.http.patch(`${environment.apiUrl}/usuarios/${this.usuario()._id}`, body).toPromise();
+
+      localStorage.setItem('usuario', JSON.stringify(usuarioActualizado));
+      console.log('Respuesta actualizar usuario:', usuarioActualizado);
+
       this.usuario.set(usuarioActualizado);
       this.previewFoto.set(usuarioActualizado.fotoPerfil);
+      this.cargarPublicaciones(usuarioActualizado._id);
       this.editando.set(false);
       this.alert.success('Perfil actualizado correctamente');
     }
+   catch (err: any) {
+      const backendError = err?.error;
 
-    catch (error) {
-      console.error(error);
+      if (!backendError) {
+        this.alert.error('No se pudo actualizar el perfil');
+        return;
+      }
+
+      if (backendError.campo === 'email') {
+        this.perfilForm.get('email')?.setErrors({ existe: true });
+        this.perfilForm.get('email')?.markAsTouched();
+        this.alert.error('Mail duplicado');
+        return;
+      }
+
+      if (backendError.campo === 'username') {
+        this.perfilForm.get('username')?.setErrors({ existe: true });
+        this.perfilForm.get('username')?.markAsTouched();
+        this.alert.error('Username duplicado');
+        return;
+      }
+
       this.alert.error('No se pudo actualizar el perfil');
     }
   }
@@ -194,6 +241,65 @@ export class Perfil implements OnInit {
   } catch {
     this.alert.error('Error al guardar cambios');
   }
+}
+
+  mensaje(campo: string, nombre: string): string {
+    return this.validaciones.obtenerMensaje(
+      this.perfilForm.get(campo),
+      nombre
+    );
+  }
+
+  cargarPerfil(usuario: any) {
+
+  this.usuario.set(usuario);
+
+  this.previewFoto.set(usuario.fotoPerfil);
+
+  this.perfilForm.patchValue({
+
+    nombre: usuario.nombre,
+    apellido: usuario.apellido,
+    perfil: usuario.perfil,
+    fechaNacimiento: usuario.fechaNacimiento?.substring(0,10),
+    descripcion: usuario.descripcion,
+    email: usuario.email,
+    username: usuario.username,
+
+  });
+
+  this.cargarPublicaciones(usuario._id);
+
+}
+
+obtenerPerfil(id: string) {
+  this.registrarVisita(id);
+  this.http.get<any>(`${environment.apiUrl}/usuarios/${id}`)
+    .subscribe(usuario => {
+
+      this.cargarPerfil(usuario);
+
+    });
+
+}
+
+registrarVisita(perfilId: string) {
+
+  const usuarioLogueado = JSON.parse(
+    localStorage.getItem('usuario') || '{}'
+  );
+
+  if (!usuarioLogueado._id) return;
+
+  this.http.post(
+    `${environment.apiUrl}/visitas`,
+    {
+      visitanteId: usuarioLogueado._id,
+      perfilVisitadoId: perfilId
+    }
+  )
+  .subscribe();
+
 }
 
 

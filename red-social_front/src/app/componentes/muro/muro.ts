@@ -121,6 +121,14 @@ async subirImagen(event: any) {
   }
 }
 
+eliminarPublicacion(id: string) {
+
+  this.listaPublicaciones.update(lista =>
+    lista.filter(p => p._id !== id)
+  );
+
+}
+
 
 cargarMas() {
 

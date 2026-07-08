@@ -20,7 +20,7 @@ import { environment } from '../../../environments/environment';
 
 export class Publicacion {
   @Input() publicacion: any;
-  @Output() eliminada = new EventEmitter();
+  @Output() eliminada = new EventEmitter<string>();
   @Output() editada = new EventEmitter<any>();
   usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
   miUsuarioId = this.usuarioLogueado._id;
@@ -53,20 +53,27 @@ export class Publicacion {
     return this.publicacion.usuarioId === this.miUsuarioId ;
   }
 
-  eliminar() {
-    if (confirm('¿Estás seguro de que deseas eliminar esta publicación?')) {
-      this.http.delete(`${environment.apiUrl}/publicaciones/${this.publicacion._id}`,
-        {}  )
-        .subscribe({
-          next: () => {
-            this.eliminada.emit(); 
-          },
-          error: (err) => {
-            console.error("Error al eliminar:", err);
-            alert("No se pudo eliminar la publicación");
-          }
-        });
-    }
+  async eliminar() {
+
+    const confirmado = await this.alert.confirmDelete(
+      "¿Estás seguro de que deseas eliminar esta publicación?"
+    );
+
+    if (!confirmado) return;
+
+    this.http.delete(
+      `${environment.apiUrl}/publicaciones/${this.publicacion._id}`
+    )
+    .subscribe({
+      next: () => {
+        this.eliminada.emit(this.publicacion._id);
+      },
+      error: (err) => {
+        console.error("Error al eliminar:", err);
+        this.alert.error("No se pudo eliminar la publicación");
+      }
+    });
+
   }
 
   obtenerPublicacionPorId(id: string) {

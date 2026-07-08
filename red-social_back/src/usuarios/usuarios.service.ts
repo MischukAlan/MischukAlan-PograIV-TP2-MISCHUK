@@ -59,47 +59,56 @@ constructor(
 
  
 async editar(id: string, updateUsuarioDto: UpdateUsuarioDto) {
-  const usuario = await this.usuarioModel.findByIdAndUpdate(
+
+    if (updateUsuarioDto.email) {
+      const existeEmail = await this.usuarioModel.findOne({
+        email: updateUsuarioDto.email,
+        _id: { $ne: id },
+      });
+
+      if (existeEmail) {
+        throw new BadRequestException({
+          campo: 'email',
+          message: 'El correo ya está registrado',
+        });
+      }
+    }
+
+
+    if (updateUsuarioDto.username) {
+      const existeUsername = await this.usuarioModel.findOne({
+        username: updateUsuarioDto.username,
+        _id: { $ne: id },
+      });
+
+      if (existeUsername) {
+        throw new BadRequestException({
+          campo: 'username',
+          message: 'El nombre de usuario ya está en uso',
+        });
+      }
+    }
+  const usuarioActualizado = await this.usuarioModel.findByIdAndUpdate(
     id,
     updateUsuarioDto,
     { new: true }
   );
 
-  if (!usuario) {
+  if (!usuarioActualizado) {
     throw new NotFoundException('Usuario no encontrado');
   }
-  const existeUsername = await this.usuarioModel.findOne({
-        username: usuario.username,
-        _id: { $ne: id }
-    });
-
-    if (existeUsername) {
-        throw new BadRequestException('El nombre de usuario ya está en uso.');
-    }
-    const existeEmail = await this.usuarioModel.findOne({
-        email: usuario.email,
-        _id: { $ne: id }
-    });
-
-    if (existeEmail) {
-        throw new BadRequestException('El correo ya está registrado.');
-    }
-    if (usuario.password) {
-        usuario.password = await bcrypt.hash(usuario.password,10);
-    }
-
 
   await this.publicacionesModel.updateMany(
     { usuarioId: id },
-    {$set: {
-        autor: `${usuario.nombre} ${usuario.apellido}`,
-        fotoAutor: usuario.fotoPerfil,
-      },
+    {
+      $set: {
+        autor: `${usuarioActualizado.nombre} ${usuarioActualizado.apellido}`,
+        fotoAutor: usuarioActualizado.fotoPerfil
+      }
     }
-  );
+  )
 
-  return usuario;
-}
+  return usuarioActualizado}
 
   async remove(id: string) {
     return await this.usuarioModel.findByIdAndDelete(id).exec();

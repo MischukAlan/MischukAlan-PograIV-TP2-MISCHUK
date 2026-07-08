@@ -19,6 +19,13 @@ export class PublicacionesController {
   async likePublicacion(@Param('id') id: string, @Body('usuarioId') usuarioId: string) {
     return await this.publicacionesService.likePublicacion(id, usuarioId);
   }
+  
+  @Get('estadisticas/likes-dia')
+  likesPorDia(){
+
+    return this.publicacionesService.likesPorDia();
+
+  }
 
   @Post()
   create(

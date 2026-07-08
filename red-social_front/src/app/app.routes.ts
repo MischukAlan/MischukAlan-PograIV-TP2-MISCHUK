@@ -18,10 +18,17 @@ export const routes: Routes = [
     
     {path: '', redirectTo: '/login', pathMatch: 'full'},
     
+    {
+    path: 'perfil/:id',
+    component: Perfil,
+    canActivate: [authGuard]
+    },
+
     {path: 'perfil', 
         component: Perfil,
         canActivate: [authGuard]        
     },
+
 
     {path: 'dashboard-usuarios', 
         component: DashboardUsuarios,

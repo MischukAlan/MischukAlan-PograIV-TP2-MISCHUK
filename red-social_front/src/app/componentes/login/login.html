@@ -1,7 +1,7 @@
-<div class="grid grid-cols-5 min-h-screen">
+<div class="grid grid-cols-5 min-h-screen  bg-[#540863]">
   
-  <div class="col-span-3 border-r border-purple-200 flex justify-center items-center">
-    <img src="login_1.png" alt="imagenLogin" class="w-3xl h-3xl object-cover">
+  <div class="col-span-3 border-r border-[#92487A] flex justify-center items-center">
+    <img src="login_2.png" alt="imagenLogin" class="w-3xl h-3xl object-cover drop-shadow-[0_0_15px_rgba(255,211,213,0.15)]">
   </div>
 
 <div class="col-span-2 flex justify-center items-center p-6">
@@ -9,23 +9,23 @@
   <form class="flex flex-col gap-4 w-full max-w-sm">
     
     <div class="text-left mb-2">
-        <h2 class="text-2xl font-bold text-black ml-1">LOG</h2>
-        <p class="text-9xl text-purple-600 -mt-3"style="font-family: 'Black Ops One';">IN</p>
+        <h2 class="text-2xl font-bold text-[#E49BA6] ml-1 tracking-wider">LOG</h2>
+        <p class="text-9xl text-[#FFD3D5] -mt-3" style="font-family: 'Black Ops One';">IN</p>
     </div>
 
     <input type="email" appAutoFocus placeholder="Email - Nombre de Usuario" name="email"
-      [(ngModel)]="identificador"  class="bg-purple-200 border border-purple-500 p-3 rounded text-black focus:outline-none focus:border-purple-900">
+      [(ngModel)]="identificador" class="bg-[#71306F] border border-[#E49BA6] p-3 rounded-xl text-[#FFD3D5] placeholder:text-[#FFD3D5]/60 focus:outline-none focus:border-[#FFD3D5] focus:ring-1 focus:ring-[#FFD3D5] transition-all">
 
     <input type="password" placeholder="Contraseña" name="password"
-      [(ngModel)]="clave"  class="bg-purple-200 border border-purple-500 p-3 rounded text-black focus:outline-none focus:border-purple-900">
+      [(ngModel)]="clave" class="bg-[#71306F] border border-[#E49BA6] p-3 rounded-xl text-[#FFD3D5] placeholder:text-[#FFD3D5]/60 focus:outline-none focus:border-[#FFD3D5] focus:ring-1 focus:ring-[#FFD3D5] transition-all">
 
     <button type="submit" (click)="iniciarSesion()" 
-        class="bg-purple-900 text-white font-bold py-3 rounded uppercase tracking-widest hover:bg-purple-950 transition-colors mt-2">
+        class="bg-[#E49BA6] text-[#540863] font-bold py-3 rounded-xl uppercase tracking-widest hover:bg-[#FFD3D5] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] mt-2 cursor-pointer shadow-md">
         Entrar
     </button>
      <div class="text-center pt-2">
-            <a routerLink="/registro" class="text-slate-600 text-sm font-medium cursor-default">
-                ¿No tenés cuenta? <span class="text-sky-500 cursor-pointer font-bold tracking-wider hover:underline">Registrate</span>
+            <a routerLink="/registro" class="text-[#FFD3D5]/80 text-sm font-medium cursor-default">
+                ¿No tenés cuenta? <span class="text-[#E49BA6] cursor-pointer font-bold tracking-wider hover:text-[#FFD3D5] hover:underline transition-colors">Registrate</span>
             </a>
     </div>
   </form>

@@ -87,7 +87,7 @@ async crearUsuario() {
 
   if (this.registroForm.invalid || !this.fotoPerfil()) {
     this.registroForm.markAllAsTouched();
-    alert('Faltan completar campos o seleccionar una foto');
+    this.alert.error("Error, revisa los campos")
     return;
   }
   try {
@@ -95,8 +95,9 @@ async crearUsuario() {
       this.registroForm.value,
       this.fotoPerfil()!
     );
+    
+    this.alert.successTimer("Usuario creado", 500)
 
-    alert('Usuario creado');
 
     this.cargarUsuarios();
 

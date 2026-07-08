@@ -1,9 +1,8 @@
-<div class="min-h-screen bg-gray-50 py-10 px-4">
+<div class="min-h-screen bg-gradient-to-b from-[#540863] via-[#71306F] to-[#92487A] py-10 px-4">
   <div class="max-w-3xl mx-auto">
 
     <div *ngIf="publicacion() as p"
-         class="bg-white p-8 rounded-3xl shadow-md border border-gray-200 mb-8">
-
+         class="bg-[#92487A] p-8 rounded-3xl shadow-md border border-[#E49BA6] mb-8">
 
       <div class="flex justify-between items-center">
 
@@ -12,7 +11,7 @@
           <ng-container *ngIf="p.fotoAutor; else autorIniciales">
             <img
               [src]="p.fotoAutor"
-              class="w-14 h-14 rounded-full object-cover border border-gray-300">
+              class="w-14 h-14 rounded-full object-cover border border-[#E49BA6]">
           </ng-container>
 
           <ng-template #autorIniciales>
@@ -21,46 +20,51 @@
             </div>
           </ng-template>
 
-          <span class="font-semibold text-lg">{{ p.autor }}</span>
+          <span class="font-semibold text-lg text-[#FFD3D5]">{{ p.autor }}</span>
         </div>
 
-        <span class="text-sm text-gray-400">
-  
+        <span class="text-sm text-[#E49BA6]">
           {{ p.fechaCreado | tiempoTranscurrido}}
         </span>
       </div>
 
-
-      <h1 class="text-4xl font-bold text-gray-900 mt-6 mb-3">
+      <h1 class="text-4xl font-bold text-[#FFD3D5] mt-2 mb-2 tracking-wide">
         {{ p.titulo }}
       </h1>
 
-      <p class="text-gray-700 text-lg leading-relaxed">
+      <p class="text-[#FFD3D5]/90 text-lg">
         {{ p.mensaje }}
       </p>
 
+      <ng-container *ngIf="p.imagenUrl">
+        <div class="mt-6 flex justify-center">
+          <img
+            [src]="p.imagenUrl"
+            class="max-h-100 w-full object-contain rounded-2xl border border-[#E49BA6] shadow-sm">
+        </div>
+      </ng-container>
 
-      <div class="mt-8 pt-6 border-t border-gray-300">
-        <h3 class="font-semibold mb-2">Deja un comentario</h3>
+      <div class="mt-8 pt-6 border-t border-[#E49BA6]/40">
+        <h3 class="font-semibold mb-2 text-[#FFD3D5]">Deja un comentario</h3>
 
         <div class="flex gap-2">
           <textarea
             placeholder="Escribe algo..."
             [(ngModel)]="nuevoComentarioTexto"
-            class="w-full border border-gray-200 p-3 rounded-xl focus:outline-purple-400 resize-none"
+            class="w-full bg-[#71306F] border border-[#E49BA6] p-3 rounded-xl text-[#FFD3D5] placeholder:text-[#FFD3D5]/60 focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] resize-none"
             rows="1"></textarea>
 
           <button
             (click)="enviarComentario()"
             [disabled]="enviandoComentario()"
-            class="bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold hover:bg-purple-800 disabled:opacity-70 flex items-center justify-center min-w-27.5">
+            class="bg-[#E49BA6] text-[#540863] px-6 py-2 rounded-xl font-bold hover:bg-[#FFD3D5] disabled:opacity-70 flex items-center justify-center min-w-27.5 transition cursor-pointer">
 
             <ng-container *ngIf="!enviandoComentario(); else spinner">
               Enviar
             </ng-container>
 
             <ng-template #spinner>
-              <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+              <svg class="animate-spin h-5 w-5 text-[#540863]" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10"
                         stroke="currentColor" stroke-width="4" fill="none"></circle>
                 <path class="opacity-75" fill="currentColor"
@@ -75,19 +79,19 @@
 
     <div class="space-y-4">
 
-      <h3 class="font-bold text-gray-800 text-lg">
+      <h3 class="font-bold text-[#FFD3D5] text-lg tracking-wider">
         {{ comentarios().length | comentarios}}
       </h3>
 
       <div *ngFor="let c of comentarios()"
-           class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex gap-4">
+           class="bg-[#92487A]/90 p-4 rounded-xl border border-[#E49BA6]/60 shadow-sm flex gap-4">
 
         <div class="shrink-0">
 
           <ng-container *ngIf="c.usuarioId?.fotoPerfil; else comentarioIniciales">
             <img
               [src]="c.usuarioId?.fotoPerfil"
-              class="w-12 h-12 rounded-full object-cover border border-gray-200">
+              class="w-12 h-12 rounded-full object-cover border border-[#E49BA6]">
           </ng-container>
 
           <ng-template #comentarioIniciales>
@@ -98,17 +102,16 @@
 
         </div>
 
-
         <div class="flex-1">
 
           <div class="flex justify-between items-start">
 
             <div>
-              <h4 class="font-bold text-gray-900 leading-none">
+              <h4 class="font-bold text-[#FFD3D5] leading-none mb-1">
                 {{ c.usuarioId?.nombre }} {{ c.usuarioId?.apellido }}
               </h4>
 
-              <span class="text-xs text-gray-400">
+              <span class="text-xs text-[#E49BA6]">
                 {{ c.createdAt | tiempoTranscurrido}}
               </span>
             </div>
@@ -116,14 +119,14 @@
             <div class="flex items-center gap-2">
 
               <p *ngIf="c.modificado"
-                 class="text-xs italic text-gray-400">
+                 class="text-xs italic text-[#E49BA6]/70">
                 Editado
               </p>
 
               <button
                 *ngIf="esDueno(c)"
                 (click)="editarComentario(c)"
-                class="text-gray-400 hover:text-purple-700 transition">
+                class="text-[#E49BA6] hover:text-[#FFD3D5] transition cursor-pointer">
 
                 <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg"
                      fill="none" viewBox="0 0 24 24">
@@ -139,35 +142,33 @@
             </div>
           </div>
 
-          <ng-container *ngIf="comentarioEditando()?._id !== c._id; else editMode">
+          <div class="mt-2">
+            <ng-container *ngIf="comentarioEditando()?._id !== c._id; else editMode">
+              <p class="text-[#FFD3D5]/90 whitespace-pre-wrap break-all">
+                {{ c.texto }}
+              </p>
+            </ng-container>
 
-            <p class="text-gray-700 whitespace-pre-wrap break-all">
-              {{ c.texto }}
-            </p>
+            <ng-template #editMode>
+              <textarea
+                [(ngModel)]="mensajeEditado"
+                class="w-full text-sm bg-[#71306F] border border-[#E49BA6] p-2 rounded-xl text-[#FFD3D5] focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] resize-none"></textarea>
 
-          </ng-container>
+              <div class="flex gap-2 mt-2">
+                <button
+                  (click)="guardarEdicion()"
+                  class="text-xs bg-[#E49BA6] text-[#540863] font-bold px-3 py-1.5 rounded-lg hover:bg-[#FFD3D5] transition cursor-pointer">
+                  Guardar
+                </button>
 
-          <ng-template #editMode>
-
-            <textarea
-              [(ngModel)]="mensajeEditado"
-              class="w-full text-sm border p-2 rounded"></textarea>
-
-            <div class="flex gap-2 mt-2">
-              <button
-                (click)="guardarEdicion()"
-                class="text-xs bg-purple-600 text-white px-2 py-1 rounded">
-                Guardar
-              </button>
-
-              <button
-                (click)="cancelarEdicion()"
-                class="text-xs text-gray-500 underline">
-                Cancelar
-              </button>
-            </div>
-
-          </ng-template>
+                <button
+                  (click)="cancelarEdicion()"
+                  class="text-xs text-[#E49BA6] hover:text-[#FFD3D5] underline transition cursor-pointer">
+                  Cancelar
+                </button>
+              </div>
+            </ng-template>
+          </div>
 
         </div>
       </div>

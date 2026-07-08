@@ -89,6 +89,45 @@ async likePublicacion(id: string, usuarioId: string) {
   }
 }
 
+
+async likesPorDia() {
+  return await this.publicacionModel.aggregate([
+    {
+      $unwind: "$likes"
+    },
+
+    {
+      $group:{
+        _id:{
+          $dateToString:{
+            format:"%Y-%m-%d",
+            date:"$fechaCreado"
+          }
+        },
+        cantidad:{
+          $sum:1
+        }
+      }
+    },
+
+    {
+      $sort:{
+        _id:1
+      }
+    },
+
+    {
+      $project:{
+        _id:0,
+        fecha:"$_id",
+        cantidad:1
+      }
+    }
+
+  ]);
+
+}
+
 async editarPubli(id: string, dto: UpdatePublicacionDto) {
   const updateData: any = {};
   if (dto.titulo) updateData.titulo = dto.titulo;

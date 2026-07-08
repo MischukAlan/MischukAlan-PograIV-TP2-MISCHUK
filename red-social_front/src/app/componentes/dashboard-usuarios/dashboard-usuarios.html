@@ -1,200 +1,208 @@
-<div class="min-h-screen bg-gray-100 p-8">
+<div class="min-h-screen bg-linear-to-b from-[#540863] via-[#71306F] to-[#92487A] p-8">
 
-    <h1 class="text-5xl font-black text-center text-purple-700 mb-10">
+    <h1 class="text-5xl font-black text-center text-[#FFD3D5] mb-10 tracking-wide uppercase drop-shadow-md">
         Dashboard Users
     </h1>
 
-    <div class="grid grid-cols-2 gap-8">
+    <div class="grid grid-cols-2 gap-8 max-w-7xl mx-auto">
 
         <div class="flex flex-col">
-            <form [formGroup]="registroForm" (ngSubmit)="crearUsuario()" class="bg-white p-6 rounded-xl shadow w-full h-[90vh] overflow-y-auto">
-                <h2 class="text-3xl font-bold text-purple-700 mb-5">
+            <form [formGroup]="registroForm" (ngSubmit)="crearUsuario()" class="bg-[#92487A] border border-[#E49BA6] p-6 rounded-3xl shadow-xl w-full h-[85vh] overflow-y-auto custom-scrollbar">
+                <h2 class="text-3xl font-bold text-[#FFD3D5] mb-6 tracking-wide border-b border-[#E49BA6]/30 pb-2">
                     Crear Usuario
                 </h2>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <div class="flex justify-between items-center mb-1">
-                            <label class="text-xs font-bold text-purple-900">Nombre</label>
-                            <span *ngIf="mensaje('nombre','El nombre')" class="text-[10px] text-red-500 font-medium">
+                            <label class="text-xs font-bold text-[#FFD3D5]">Nombre</label>
+                            <span *ngIf="mensaje('nombre','El nombre')" class="text-[10px] text-red-300 font-semibold animate-pulse">
                                 {{ mensaje('nombre','El nombre') }}
                             </span>
                         </div>
                         <input
                             formControlName="nombre"
                             type="text"
-                            class="w-full p-2 rounded border bg-purple-100"
+                            placeholder="Ej. Juan"
+                            class="w-full p-2.5 rounded-xl border bg-[#71306F] text-[#FFD3D5] placeholder:text-[#FFD3D5]/40 focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition-all"
                             [ngClass]="{
-                                'border-red-500 bg-red-50': mensaje('nombre','El nombre'),
-                                'border-purple-300': !mensaje('nombre','El nombre')
+                                'border-red-400 bg-red-950/40': mensaje('nombre','El nombre'),
+                                'border-[#E49BA6]/50': !mensaje('nombre','El nombre')
                             }">
                     </div>
 
                     <div>
                         <div class="flex justify-between items-center mb-1">
-                            <label class="text-xs font-bold text-purple-900">Apellido</label>
-                            <span *ngIf="mensaje('apellido','El apellido')" class="text-[10px] text-red-500 font-medium">
+                            <label class="text-xs font-bold text-[#FFD3D5]">Apellido</label>
+                            <span *ngIf="mensaje('apellido','El apellido')" class="text-[10px] text-red-300 font-semibold animate-pulse">
                                 {{ mensaje('apellido','El apellido') }}
                             </span>
                         </div>
                         <input
                             formControlName="apellido"
                             type="text"
-                            class="w-full p-2 rounded border bg-purple-100"
+                            placeholder="Ej. Pérez"
+                            class="w-full p-2.5 rounded-xl border bg-[#71306F] text-[#FFD3D5] placeholder:text-[#FFD3D5]/40 focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition-all"
                             [ngClass]="{
-                                'border-red-500 bg-red-50': mensaje('apellido','El apellido'),
-                                'border-purple-300': !mensaje('apellido','El apellido')
+                                'border-red-400 bg-red-950/40': mensaje('apellido','El apellido'),
+                                'border-[#E49BA6]/50': !mensaje('apellido','El apellido')
                             }">
                     </div>
                 </div>
 
-                <div class="mt-2">
+                <div class="mt-4">
                     <div class="flex justify-between items-center mb-1">
-                        <label class="text-xs font-bold text-purple-900">Nombre de usuario</label>
-                        <span *ngIf="mensaje('username','El nombre de usuario')" class="text-[10px] text-red-500 font-medium">
+                        <label class="text-xs font-bold text-[#FFD3D5]">Nombre de usuario</label>
+                        <span *ngIf="mensaje('username','El nombre de usuario')" class="text-[10px] text-red-300 font-semibold animate-pulse">
                             {{ mensaje('username','El nombre de usuario') }}
                         </span>
                     </div>
                     <input 
                         formControlName="username" 
                         type="text" 
-                        class="w-full p-2 rounded border bg-purple-100"
+                        placeholder="juanperez123"
+                        class="w-full p-2.5 rounded-xl border bg-[#71306F] text-[#FFD3D5] placeholder:text-[#FFD3D5]/40 focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition-all"
                         [ngClass]="{
-                            'border-red-500 bg-red-50': mensaje('username','El nombre de usuario'),
-                            'border-purple-300': !mensaje('username','El nombre de usuario')
+                            'border-red-400 bg-red-950/40': mensaje('username','El nombre de usuario'),
+                            'border-[#E49BA6]/50': !mensaje('username','El nombre de usuario')
                         }">
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mt-2">
+                <div class="grid grid-cols-2 gap-4 mt-4">
                     <div>
                         <div class="flex justify-between items-center mb-1">
-                            <label class="text-xs font-bold text-purple-900">Fecha de Nacimiento</label>
-                            <span *ngIf="mensaje('fechaNacimiento','La fecha de nacimiento')" class="text-[10px] text-red-500 font-medium">
+                            <label class="text-xs font-bold text-[#FFD3D5]">Fecha de Nacimiento</label>
+                            <span *ngIf="mensaje('fechaNacimiento','La fecha de nacimiento')" class="text-[10px] text-red-300 font-semibold animate-pulse">
                                 {{ mensaje('fechaNacimiento','La fecha de nacimiento') }}
                             </span>
                         </div>
                         <input 
                             formControlName="fechaNacimiento" 
                             type="date" 
-                            class="w-full p-2 rounded border bg-purple-100"
+                            class="w-full p-2.5 rounded-xl border bg-[#71306F] text-[#FFD3D5] focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition-all"
                             [ngClass]="{
-                                'border-red-500 bg-red-50': mensaje('fechaNacimiento','La fecha de nacimiento'),
-                                'border-purple-300': !mensaje('fechaNacimiento','La fecha de nacimiento')
+                                'border-red-400 bg-red-950/40': mensaje('fechaNacimiento','La fecha de nacimiento'),
+                                'border-[#E49BA6]/50': !mensaje('fechaNacimiento','La fecha de nacimiento')
                             }">
                     </div>
 
                     <div>
                         <div class="flex justify-between items-center mb-1">
-                            <label class="text-xs font-bold text-purple-900">Imagen de Perfil</label>
-                            <span *ngIf="mensaje('fotoPerfil','La foto de perfil')" class="text-[10px] text-red-500 font-medium">
+                            <label class="text-xs font-bold text-[#FFD3D5]">Imagen de Perfil</label>
+                            <span *ngIf="mensaje('fotoPerfil','La foto de perfil')" class="text-[10px] text-red-300 font-semibold animate-pulse">
                                 {{ mensaje('fotoPerfil','La foto de perfil') }}
                             </span>
                         </div>
                         <input type="file" id="fileInput" (change)="seleccionarArchivo($event)" class="hidden" accept="image/*">
-                    <label for="fileInput" class="block w-full text-center bg-purple-200 border border-purple-400 p-2 rounded text-sm text-purple-800 cursor-pointer hover:bg-purple-300 transition">
-                        {{ fotoPerfil() ? fotoPerfil.name : 'Seleccionar foto de perfil...' }}
-                    </label>
+                        <label for="fileInput" class="block w-full text-center bg-[#71306F] border border-[#E49BA6] p-2.5 rounded-xl text-sm text-[#FFD3D5] font-medium cursor-pointer hover:bg-[#540863] hover:text-white transition shadow-sm border-dashed">
+                            {{ fotoPerfil() ? fotoPerfil.name : 'Seleccionar foto de perfil...' }}
+                        </label>
                     </div>
                 </div>
 
-                <div class="mt-2">
+                <div class="mt-4">
                     <div class="flex justify-between items-center mb-1">
-                        <label class="text-xs font-bold text-purple-900">Descripción</label>
-                        <span *ngIf="mensaje('descripcion','La descripción')" class="text-[10px] text-red-500 font-medium">
+                        <label class="text-xs font-bold text-[#FFD3D5]">Descripción</label>
+                        <span *ngIf="mensaje('descripcion','La descripción')" class="text-[10px] text-red-300 font-semibold animate-pulse">
                             {{ mensaje('descripcion','La descripción') }}
                         </span>
                     </div>
                     <input 
                         formControlName="descripcion" 
                         type="text" 
-                        class="w-full p-2 rounded border bg-purple-100"
+                        placeholder="Breve biografía del usuario..."
+                        class="w-full p-2.5 rounded-xl border bg-[#71306F] text-[#FFD3D5] placeholder:text-[#FFD3D5]/40 focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition-all"
                         [ngClass]="{
-                            'border-red-500 bg-red-50': mensaje('descripcion','La descripción'),
-                            'border-purple-300': !mensaje('descripcion','La descripción')
+                            'border-red-400 bg-red-950/40': mensaje('descripcion','La descripción'),
+                            'border-[#E49BA6]/50': !mensaje('descripcion','La descripción')
                         }">
                 </div>
                 
-                <div class="mt-2">
+                <div class="mt-4">
                     <div class="flex justify-between items-center mb-1">
-                        <label class="text-xs font-bold text-purple-900">Perfil</label>
-                        <span *ngIf="mensaje('perfil','El perfil')" class="text-[10px] text-red-500 font-medium">
+                        <label class="text-xs font-bold text-[#FFD3D5]">Perfil / Rol</label>
+                        <span *ngIf="mensaje('perfil','El perfil')" class="text-[10px] text-red-300 font-semibold animate-pulse">
                             {{ mensaje('perfil','El perfil') }}
                         </span>
                     </div>
                     <select
                         formControlName="perfil"
-                        class="w-full bg-purple-100 border rounded p-2 text-purple-900 font-medium cursor-pointer transition"
+                        class="w-full bg-[#71306F] border rounded-xl p-2.5 text-[#FFD3D5] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition"
                         [ngClass]="{
-                            'border-red-500 bg-red-50': mensaje('perfil','El perfil'),
-                            'border-purple-300': !mensaje('perfil','El perfil')
+                            'border-red-400 bg-red-950/40': mensaje('perfil','El perfil'),
+                            'border-[#E49BA6]/50': !mensaje('perfil','El perfil')
                         }">
-                        <option value="usuario">Usuario</option>
-                        <option value="administrador">Administrador</option>
+                        <option class="bg-[#540863]" value="usuario">Usuario</option>
+                        <option class="bg-[#540863]" value="administrador">Administrador</option>
                     </select>
                 </div>
 
-                <div class="mt-2">
+                <div class="mt-4">
                     <div class="flex justify-between items-center mb-1">
-                        <label class="text-xs font-bold text-purple-900">Email</label>
-                        <span *ngIf="mensaje('email','El email')" class="text-[10px] text-red-500 font-medium">
+                        <label class="text-xs font-bold text-[#FFD3D5]">Email</label>
+                        <span *ngIf="mensaje('email','El email')" class="text-[10px] text-red-300 font-semibold animate-pulse">
                             {{ mensaje('email','El email') }}
                         </span>
                     </div>
                     <input 
                         formControlName="email" 
                         type="email" 
-                        class="w-full p-2 rounded border bg-purple-100"
+                        placeholder="correo@ejemplo.com"
+                        class="w-full p-2.5 rounded-xl border bg-[#71306F] text-[#FFD3D5] placeholder:text-[#FFD3D5]/40 focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition-all"
                         [ngClass]="{
-                            'border-red-500 bg-red-50': mensaje('email','El email'),
-                            'border-purple-300': !mensaje('email','El email')
+                            'border-red-400 bg-red-950/40': mensaje('email','El email'),
+                            'border-[#E49BA6]/50': !mensaje('email','El email')
                         }">
                 </div>
 
-                <div class="mt-2">
-                    <div class="flex justify-between items-center mb-1">
-                        <label class="text-xs font-bold text-purple-900">Contraseña</label>
-                        <span *ngIf="mensaje('password','La contraseña')" class="text-[10px] text-red-500 font-medium">
-                            {{ mensaje('password','La contraseña') }}
-                        </span>
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-[#FFD3D5]">Contraseña</label>
+                            <span *ngIf="mensaje('password','La contraseña')" class="text-[10px] text-red-300 font-semibold animate-pulse">
+                                {{ mensaje('password','La contraseña') }}
+                            </span>
+                        </div>
+                        <input 
+                            formControlName="password" 
+                            type="password" 
+                            placeholder="••••••••"
+                            class="w-full p-2.5 rounded-xl border bg-[#71306F] text-[#FFD3D5] placeholder:text-[#FFD3D5]/40 focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition-all"
+                            [ngClass]="{
+                                'border-red-400 bg-red-950/40': mensaje('password','La contraseña'),
+                                'border-[#E49BA6]/50': !mensaje('password','La contraseña')
+                            }">
                     </div>
-                    <input 
-                        formControlName="password" 
-                        type="password" 
-                        class="w-full p-2 rounded border bg-purple-100"
-                        [ngClass]="{
-                            'border-red-500 bg-red-50': mensaje('password','La contraseña'),
-                            'border-purple-300': !mensaje('password','La contraseña')
-                        }">
-                </div>
 
-                <div class="mt-2">
-                    <div class="flex justify-between items-center mb-1">
-                        <label class="text-xs font-bold text-purple-900">Repetir Contraseña</label>
-                        <span *ngIf="mensaje('passwordConfirm','La confirmación de contraseña')" class="text-[10px] text-red-500 font-medium">
-                            {{ mensaje('passwordConfirm','La confirmación de contraseña') }}
-                        </span>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs font-bold text-[#FFD3D5]">Repetir Contraseña</label>
+                        </div>
+                        <input 
+                            formControlName="passwordConfirm" 
+                            type="password" 
+                            placeholder="••••••••"
+                            class="w-full p-2.5 rounded-xl border bg-[#71306F] text-[#FFD3D5] focus:outline-none focus:ring-1 focus:ring-[#FFD3D5] transition-all"
+                            [ngClass]="{
+                                'border-red-400 bg-red-950/40': registroForm.hasError('noCoincide'),
+                                'border-[#E49BA6]/50': !registroForm.hasError('noCoincide')
+                            }">
                     </div>
-                    <input 
-                        formControlName="passwordConfirm" 
-                        type="password" 
-                        class="w-full p-2 rounded border bg-purple-100"
-                        [ngClass]="{
-                            'border-red-500 bg-red-50': mensaje('passwordConfirm','La confirmación de contraseña'),
-                            'border-purple-300': !mensaje('passwordConfirm','La confirmación de contraseña')
-                        }">
                 </div>
-                <span
-                *ngIf="registroForm.get('passwordConfirm')?.touched &&
-                        registroForm.get('passwordConfirm')?.value &&
-                        registroForm.hasError('noCoincide')"
-                class="text-xs text-red-500 font-medium">
-                Las contraseñas no coinciden.
-                </span>
+                
+                <div class="mt-2 min-h-5">
+                    <span *ngIf="registroForm.get('passwordConfirm')?.touched &&
+                                 registroForm.get('passwordConfirm')?.value &&
+                                 registroForm.hasError('noCoincide')"
+                          class="text-xs text-red-300 font-semibold animate-pulse">
+                        Las contraseñas no coinciden.
+                    </span>
+                </div>
 
 
                 <button
                     type="submit"
-                    class="w-full bg-purple-700 text-white p-2 rounded mt-6 hover:bg-purple-800 transition font-bold">
+                    class="w-full bg-[#E49BA6] text-[#540863] p-3 rounded-xl mt-4 hover:bg-[#FFD3D5] hover:scale-101 transition-all font-bold shadow-md cursor-pointer tracking-wide uppercase text-sm">
                     Crear nuevo usuario
                 </button>
 
@@ -202,39 +210,38 @@
         </div>
 
         <div class="flex flex-col">
-            <div class="bg-white p-6 rounded-xl shadow h-[90vh] overflow-y-auto">
+            <div class="bg-[#92487A] border border-[#E49BA6] p-6 rounded-3xl shadow-xl h-[85vh] overflow-y-auto custom-scrollbar">
                     
-                <h2 class="text-3xl font-bold text-purple-700 mb-5">
+                <h2 class="text-3xl font-bold text-[#FFD3D5] mb-6 tracking-wide border-b border-[#E49BA6]/30 pb-2">
                     Administrar Usuarios
                 </h2>
 
-                <div *ngFor="let u of usuarios()" class="bg-white p-4 rounded-xl shadow border mb-3">
-                    <div class="flex justify-between items-start">
-                        <div class="flex gap-3">
+                <div *ngFor="let u of usuarios()" class="bg-[#71306F]/50 p-4 rounded-2xl border border-[#E49BA6]/40 mb-3 hover:bg-[#71306F]/80 transition duration-300 shadow-sm">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-4">
                             <img *ngIf="u.fotoPerfil"
-                            [src]="u.fotoPerfil" class="w-12 h-12 rounded-full object-cover">
+                                 [src]="u.fotoPerfil" class="w-12 h-12 rounded-full object-cover border-2 border-[#E49BA6]">
                        
                             <div *ngIf="!u.fotoPerfil" 
-                                class="w-12 h-12 rounded-full bg-purple-400 flex items-center justify-center text-white text-xl font-bold">
+                                class="w-12 h-12 rounded-full bg-purple-400 flex items-center justify-center text-white text-xl font-bold border-2 border-[#E49BA6]/60">
                                 {{ u | iniciales }}
                             </div>
 
-
-
                             <div>
-                                <p class="font-semibold text-lg">
+                                <p class="font-bold text-lg text-[#FFD3D5] leading-snug">
                                     {{ u.nombre }} {{ u.apellido }}
                                 </p>
-                                <p class="text-sm text-gray-500">{{ u.email }}</p>
-                                <p class="text-xs text-gray-400">
+                                <p class="text-sm text-[#FFD3D5]/70">{{ u.email }}</p>
+                                <span class="inline-block mt-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#540863] text-[#E49BA6] border border-[#E49BA6]/20">
                                     {{ u.perfil }}
-                                </p>
+                                </span>
                             </div>
                         </div>
 
                         <button
                             (click)="desactivarUsuario(u._id)"
-                            class="text-gray-500 hover:text-red-600 transition cursor-pointer">
+                            title="Desactivar Usuario"
+                            class="text-[#E49BA6] hover:text-red-400 hover:scale-110 transition cursor-pointer p-2 rounded-xl hover:bg-[#540863]/40">
                             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12h4M4 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                             </svg>
@@ -242,36 +249,37 @@
                     </div>
                 </div>
 
-                <div *ngFor="let u of usuariosDesactivados()" class="bg-white p-4 rounded-xl shadow border mb-3">
-                    <div class="flex justify-between items-start">
-                        <div class="flex gap-3">
-                        <img *ngIf="u.fotoPerfil"
-                            [src]="u.fotoPerfil" class="w-12 h-12 rounded-full object-cover grayscale">
+                <div *ngFor="let u of usuariosDesactivados()" class="bg-[#540863]/30 p-4 rounded-2xl border border-dashed border-red-400/40 mb-3 opacity-75 hover:opacity-95 transition duration-300">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <img *ngIf="u.fotoPerfil"
+                                 [src]="u.fotoPerfil" class="w-12 h-12 rounded-full object-cover border border-red-400/30 grayscale">
                        
                             <div *ngIf="!u.fotoPerfil" 
-                                class="w-12 h-12 rounded-full bg-gray-400 flex items-center justify-center text-white text-xl font-bold">
+                                class="w-12 h-12 rounded-full bg-neutral-600 flex items-center justify-center text-neutral-300 text-xl font-bold border border-neutral-500">
                                 {{ u | iniciales }}
                             </div>
 
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <p class="font-semibold text-lg text-gray-500">
+                                    <p class="font-bold text-lg text-neutral-300 line-through decoration-red-400/60">
                                         {{ u.nombre }} {{ u.apellido }}
                                     </p>
-                                    <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded-full">
-                                        Usuario desactivado
+                                    <span class="bg-red-950/60 text-red-300 border border-red-400/30 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
+                                        Inactivo
                                     </span>
                                 </div>
-                                <p class="text-sm text-gray-500">{{ u.email }}</p>
-                                <p class="text-xs text-gray-400">
+                                <p class="text-sm text-neutral-400">{{ u.email }}</p>
+                                <span class="inline-block mt-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-neutral-800 text-neutral-400">
                                     {{ u.perfil }}
-                                </p>
+                                </span>
                             </div>
                         </div>
 
                         <button
                             (click)="activarUsuario(u._id)"
-                            class="text-purple-600 hover:text-purple-800 hover:scale-105 transition cursor-pointer">
+                            title="Reactivar Usuario"
+                            class="text-green-400 hover:text-green-300 hover:scale-110 transition cursor-pointer p-2 rounded-xl hover:bg-green-950/30">
                             <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12h4m-2 2v-4M4 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                             </svg>

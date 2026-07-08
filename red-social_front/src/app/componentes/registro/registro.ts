@@ -84,6 +84,7 @@ export class Registro {
       }
     }
   }
+  
   seleccionarArchivo(event: any) {
     const file: File = event.target.files[0];
     if (file) {

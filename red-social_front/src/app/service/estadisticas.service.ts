@@ -36,4 +36,11 @@ export class EstadisticasService {
 
     return this.http.get<any[]>(`${this.api}/publicaciones`,{ params });
   }
+
+  loginPorUsuario() {return this.http.get<any[]>(`${environment.apiUrl}/ingresos/estadisticas`)}
+
+  visitasPorPerfil(){return this.http.get<any[]>(`${environment.apiUrl}/visitas/estadisticas`)}
+
+  likesPorDia(){return this.http.get<any[]>(`${environment.apiUrl}/publicaciones/estadisticas/likes-dia`)}
+  
 }
